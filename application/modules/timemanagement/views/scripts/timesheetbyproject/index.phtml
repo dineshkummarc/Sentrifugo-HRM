@@ -1,0 +1,1132 @@
+<?php
+$projectWiseWeeklyAggregatedData = $this->projectWiseWeeklyAggregatedData;
+?>
+
+<?php
+
+$now = new DateTime();
+$today = $now->format('Y-m-d');
+$selYrMon = $this->selYrMon;
+$currentMonth  = $selYrMon;
+
+$selYrMonArray = explode('-',$selYrMon);
+$selYr = $selYrMonArray[0];
+$selMon = $selYrMonArray[1];
+
+?>
+
+<script type="text/javascript">
+
+
+    var currMonth = "<?php echo $currentMonth; ?>";
+    var empDoj = $('#empDoj').val();
+    var selDay = "<?php echo $this->selDay; ?>";
+    var currentDay = "<?php echo $now->format('D'); ?>";
+    //	var selYrMon = "2015-06";
+    var dt = new Date(empDoj);
+    var empDojYr = dt.getFullYear();
+    var empDojMon = dt.getMonth();
+
+    function activeDay(day) {
+
+        $('th[id^="th"]').removeClass('active');
+        $('td[id^="td"]').removeClass('active');
+
+        $('th[id^="th"]').removeClass('activeleft');
+        $('th[id^="th"]').removeClass('activeright');
+        $('td[id^="td"]').removeClass('activeleft');
+        $('td[id^="td"]').removeClass('activeright');
+
+        $('th[id^="th_'+day+'"]').addClass('active');
+        $('td[id^="td_'+day+'"]').addClass('active');
+
+
+        $('th[id^="th_'+day+'"]').prev('th').addClass('activeleft');
+        $('th[id^="th_'+day+'"]').next('th').addClass('activeright');
+
+        $('td[id^="td_'+day+'"]').prev('td').addClass('activeleft');
+        $('td[id^="td_'+day+'"]').next('td').addClass('activeright');
+
+//		  $('span[id^="th_erase_"]').hide();
+//		  $('#th_erase_'+ day).show();
+
+    }
+    $(document).ready(function () {
+        $('.breadcrumbs').append("<span class='arrows'>&rsaquo;</span><span>Timesheet By Project</span>");
+
+        $("#calSelYrMonth").val(currMonth);
+        $('#weekview').accordion({header: '.proj',collapsible : true, active : 'none', heightStyle: 'content',animate: 200,
+            beforeActivate: function(event, ui) {
+                // The accordion believes a panel is being opened
+                if (ui.newHeader[0]) {
+                    var currHeader  = ui.newHeader;
+                    var currContent = currHeader.next('.ui-accordion-content');
+                    // The accordion believes a panel is being closed
+                } else {
+                    var currHeader  = ui.oldHeader;
+                    var currContent = currHeader.next('.ui-accordion-content');
+                }
+                // Since we've changed the default behavior, this detects the actual status
+                var isPanelSelected = currHeader.attr('aria-selected') == 'true';
+
+                // Toggle the panel's header
+                currHeader.toggleClass('ui-corner-all',isPanelSelected).toggleClass('accordion-header-active ui-state-active ui-corner-top',!isPanelSelected).attr('aria-selected',((!isPanelSelected).toString()));
+
+                // Toggle the panel's icon
+                currHeader.children('.ui-icon').toggleClass('ui-icon-triangle-1-e',isPanelSelected).toggleClass('ui-icon-triangle-1-s',!isPanelSelected);
+
+                // Toggle the panel's content
+                currContent.toggleClass('accordion-content-active',!isPanelSelected)
+                if (isPanelSelected) { currContent.slideUp(); }  else { currContent.slideDown(); }
+
+                return false; // Cancel the default action
+            }
+
+        });
+
+        var projectRows = $('#weekview .proj.ui-accordion-header');
+        for(var i=0 ; i<projectRows.length ;i++){
+            $('#weekview').accordion( "option", "active", i);
+        }
+
+        $('.ui-icon').text("arrow");
+
+        if(selDay != '' ) currentDay = selDay;
+        currentDay = currentDay.toLowerCase();
+
+        $('.week_select_list').css('display','none');
+        $("#show_hide").mouseover(function() {
+            $('.week_select_list').css('display','block');
+        });
+        $('.rejected_note').powerTip({
+            placement: 'e',
+            mouseOnToPopup: true,
+            smartPlacement: true
+        });
+        $('.hol_leave').powerTip({
+            placement: 'e',
+            mouseOnToPopup: true,
+            smartPlacement: true
+        });
+
+
+        $(document).keydown( function(e){
+            var className = e.target.className;
+            var inputHasClass = (className.indexOf('time_enter_field') != -1)?true : false;
+            if( e.which == 8 && inputHasClass ){
+                e.preventDefault();
+                return false;
+            }
+        });
+        $('.time_enter_field').bind("contextmenu", function(e) {
+            e.preventDefault();
+        });
+
+
+        $(document).click(function(e)  {
+            //console.log(" target id "+(e.target.id));
+            var idName = e.target.id;
+            //console.log(" idName is  "+idName.indexOf('_note'));
+            $('.week_select_list').css('display','none');
+            if(e.target.className != "fa fa-calendar-o fa-1-5" && e.target.className != 'daily_note enter_note'
+                && idName.indexOf('_note') == -1 )
+            {
+//   		  console.log(" target class "+(e.target.className));
+//    		  if($(".daily_note").is(":visible"))
+//    			$(".daily_note").hide();
+//    		  else $(".daily_note").show();
+                //	  $(".daily_note").show();
+//    		}
+//    		else
+//    		{
+                $(".daily_note").hide();
+            }
+        });
+
+        //  $('span[id^="th_erase_"]').hide();
+        //  $('#th_erase_'+currentDay).show();
+
+        $('.time_enter_field'). bind("drop", function(e){
+            e.preventDefault();
+            return false;
+        });
+        $('.time_enter_field').timeEntry({show24Hours: true,initialField:0,spinnerImage:'', defaultTime:"00:00"}).
+        change(function() {
+            //console.log("change");
+            var time = $(this).val();
+            var taskTdId = $(this).attr('id');
+            var tdId = $(this).attr('id');
+            var taskId = tdId.substring(10, tdId.length);
+            var taskTimeArray = time.split(':');
+            var dayName = tdId.substring(6, 9);
+
+            var sunTaskTime = $("#input_sun_"+taskId).val();
+            var monTaskTime = $("#input_mon_"+taskId).val();
+            var tueTaskTime = $("#input_tue_"+taskId).val();
+            var wedTaskTime = $("#input_wed_"+taskId).val();
+            var thuTaskTime = $("#input_thu_"+taskId).val();
+            var friTaskTime = $("#input_fri_"+taskId).val();
+            var satTaskTime = $("#input_sat_"+taskId).val();
+            var sunTimeArray = (sunTaskTime != '')?sunTaskTime.split(':'):'0';
+            var monTimeArray = (monTaskTime != '')?monTaskTime.split(':'):'0';
+            var tueTimeArray = (tueTaskTime != '')?tueTaskTime.split(':'):'0';
+            var wedTimeArray = (wedTaskTime != '')?wedTaskTime.split(':'):'0';
+            var thuTimeArray = (thuTaskTime != '')?thuTaskTime.split(':'):'0';
+            var friTimeArray = (friTaskTime != '')?friTaskTime.split(':'):'0';
+            var satTimeArray = (satTaskTime != '')?satTaskTime.split(':'):'0';
+
+            var totTaskTime =  (sunTimeArray != '0')?(parseInt(sunTimeArray[0],10) * 60 + parseInt(sunTimeArray[1],10)):0;
+            totTaskTime += (monTimeArray != '0')?(parseInt(monTimeArray[0],10) * 60 + parseInt(monTimeArray[1],10)):0;
+            totTaskTime += (tueTimeArray != '0')?(parseInt(tueTimeArray[0],10) * 60 + parseInt(tueTimeArray[1],10)):0;
+            totTaskTime += (wedTimeArray != '0')?(parseInt(wedTimeArray[0],10) * 60 + parseInt(wedTimeArray[1],10)):0;
+            totTaskTime += (thuTimeArray != '0')?(parseInt(thuTimeArray[0],10) * 60 + parseInt(thuTimeArray[1],10)):0;
+            totTaskTime += (friTimeArray != '0')?(parseInt(friTimeArray[0],10) * 60 + parseInt(friTimeArray[1],10)):0;
+            totTaskTime += (satTimeArray != '0')?(parseInt(satTimeArray[0],10) * 60 + parseInt(satTimeArray[1],10)):0;
+
+            var parentTrId = $(this).parent().parent().attr('id');
+            var parentTrIdArray = parentTrId.split('_');
+            var projId = parentTrIdArray[3];
+
+            var projTotTime = $(".tol_hrs_"+projId).text();
+            var projTimeArray =  projTotTime.split(':');
+
+            var totProjTime =  parseInt(projTimeArray[0],10) * 60 + parseInt(projTimeArray[1],10) + totTaskTime;
+            totProjTime  = Math.floor(totProjTime / 60) +':' + (totProjTime % 60);
+
+            var taskHrsPart = Math.floor(totTaskTime / 60);
+            var taskMinsPart = totTaskTime % 60;
+
+            if(taskHrsPart.toString().length == 1) taskHrsPart = '0'+taskHrsPart;
+            if(taskMinsPart.toString().length == 1) taskMinsPart = '0'+taskMinsPart;
+
+            //totTaskTime =  Math.floor(totTaskTime / 60) +':' + (totTaskTime % 60);
+            totTaskTime =  taskHrsPart +':' + taskMinsPart;
+            //console.log("  totTaskTime "+totTaskTime);
+            $("#task_tot_hrs_"+taskId).text(totTaskTime);
+
+            totTaskTime = 0;
+            $('tr[id^="proj_task_col_'+ projId +'_"]').each(function(){
+                var id = $(this).attr('id');
+                var idArray = id.split('_');
+                var taskHrs = $('#task_tot_hrs_'+idArray[4]).text();
+                //console.log(" taskHrs "+taskHrs+" idArray[4] "+idArray[4]);
+                var taskTimeArray = (taskHrs != '00:00')?taskHrs.split(':'):null;
+                totTaskTime +=  (taskTimeArray != null)?(parseInt(taskTimeArray[0],10) * 60 + parseInt(taskTimeArray[1],10)):0;
+                // console.log("  totTaskTime "+totTaskTime);
+            });
+            var projHrsPart = Math.floor(totTaskTime / 60);
+            var projMinsPart = totTaskTime % 60;
+            //	console.log("  projHrsPart "+projHrsPart + " projMinsPart "+projMinsPart);
+            if(projHrsPart.toString().length == 1) projHrsPart = '0'+projHrsPart;
+            if(projMinsPart.toString().length == 1) projMinsPart = '0'+projMinsPart;
+
+            //  var totProjTime  = Math.floor(totTaskTime / 60) +':' + (totTaskTime % 60);
+            var totProjTime  = projHrsPart +':' + projMinsPart;
+            $(".tol_hrs_"+projId).text(totProjTime);
+            var totWeekTime = 0;
+            $('td[class^="tol_hrs_"]').each(function(){
+
+                var id = $(this).attr('class');
+                id = (id.indexOf('activeright') != -1)? id.substring(0,id.indexOf('activeright')-1): id;
+
+                var idArray = id.split('_');
+                //console.log(" idArray "+idArray[2]);
+                var projHrs = $('.tol_hrs_'+idArray[2]).text();
+                //console.log(" projHrs "+ (projHrs));
+                var projTimeArray = (projHrs != '00:00')?projHrs.split(':'):null;
+                totWeekTime +=  (projTimeArray != null)?(parseInt(projTimeArray[0],10) * 60 + parseInt(projTimeArray[1],10)):0;
+            });
+            var weekHrsPart = Math.floor(totWeekTime / 60);
+            var weekMinsPart = totWeekTime % 60;
+            if(weekHrsPart.toString().length == 1) weekHrsPart = '0'+weekHrsPart;
+            if(weekMinsPart.toString().length == 1) weekMinsPart = '0'+weekMinsPart;
+
+            // var totWeek  = Math.floor(totWeekTime / 60) +':' + (totWeekTime % 60);
+            var totWeek  = weekHrsPart +':' + weekMinsPart;
+            //console.log(" totWeek "+ totWeek);
+            $(".total_week_hrs").text(totWeek);
+            var totDayTime = 0;
+            $('input[id^="input_'+ dayName + '_"]').each(function(){
+
+                var id = $(this).attr('id');
+                var idArray = id.split('_');
+                var dayHrs = $('#input_'+ dayName + '_'+idArray[2]).val();
+                if(dayHrs != '') {
+                    var dayTimeArray = (dayHrs != '00:00')?dayHrs.split(':'):null;
+                    totDayTime +=  (dayTimeArray != null)?(parseInt(dayTimeArray[0],10) * 60 + parseInt(dayTimeArray[1],10)):0;
+                }
+
+            });
+            var dayHrsPart = Math.floor(totDayTime / 60);
+            var dayMinsPart = totDayTime % 60;
+            if(dayHrsPart.toString().length == 1) dayHrsPart = '0'+dayHrsPart;
+            if(dayMinsPart.toString().length == 1) dayMinsPart = '0'+dayMinsPart;
+
+            //var totDay  = Math.floor(totDayTime / 60) +':' + (totDayTime % 60);
+            var totDay  = dayHrsPart +':' + dayMinsPart;
+
+            //if day is weekend dont check validation
+            if($('#'+dayName+'dayweekend').val()=='weekend')
+            {
+                $('#'+dayName+'_tot_hrs').html(totDay+'<span onclick="eraseTime(\''+dayName+'\')" style="display:block;" class="erase_icon" id="th_erase_'+dayName+'">Erase Time</span>');
+            }
+            else
+            {
+                $('#'+dayName+'_tot_hrs').html(totDay+'<span onclick="eraseTime(\''+dayName+'\')" style="display:none;" class="erase_icon" id="th_erase_'+dayName+'">Erase Time</span>');
+            }
+
+//    		if(time == '' || time == '00:00')
+//    			$(this).val('');
+
+        }).focusout(function() {
+            //	console.log("focus out");
+            var tdId = $(this).attr('id');
+            var time = $(this).val();
+            //	console.log("time "+time);
+            var dayName = tdId.substring(6, 9);
+//    		var dayTotHrs = $('#'+dayName+'_tot_hrs').text();
+//    		var statusTd = dayTotHrs.split(' ');
+
+            var dayTotHrs = $('#'+dayName+'_tot_hrs').clone().children().remove().end().text();
+
+            //dayTotHrs = statusTd[0];
+            //console.log(" dayTotHrs  "+dayTotHrs);
+            if(dayTotHrs.trim() == '00:00')	{
+                //	console.log(" equal ");
+                $(this).val('');
+            }
+            if(dayTotHrs.trim() != '00:00') {
+                //$("#th_erase_"+dayName).attr("visibility", "visible");
+                //	console.log(" not equal ");
+                $("#th_erase_"+dayName).show();
+            }
+        });
+
+        $('th[id^="th_'+currentDay+'"]').addClass('active');
+        $('td[id^="td_'+currentDay+'"]').addClass('active');
+
+        $('th[id^="th_'+currentDay+'"]').prev('th').addClass('activeleft');
+        $('th[id^="th_'+currentDay+'"]').next('th').addClass('activeright');
+
+        $('td[id^="td_'+currentDay+'"]').prev('td').addClass('activeleft');
+        $('td[id^="td_'+currentDay+'"]').next('td').addClass('activeright');
+
+
+        var opened = $(this).find('.ui-state-active').length;
+
+        //	console.log(" opened "+opened);
+        //  $weekview.find("tr").not('.accordion').hide();
+        // $weekview.find("tr").eq(0).show();
+
+//  		 $weekview.find(".accordion").click(function(id){
+//  			 $(id).not(this).siblings().fadeOut(1000);
+//           	 $(this).siblings().fadeToggle(1000);
+//  	    });
+
+
+        //var mainDivHeight = $(".reports-block-area").height();
+        // $('.right_container').height(eval(mainDivHeight-51));
+
+        /* $(".responsive-calendar").responsiveCalendar({
+           time: currMonth,
+           startFromSunday: true,
+           allRows: false,
+           events: {
+               "<?php // echo $today; ?>": {}
+            },
+           onInit: function() {
+
+           	  var currYrMon = (this.currentYear)+'-'+(this.currentMonth+1);
+          	  $("#calSelYrMonth").val(currYrMon);
+           },
+          onMonthChange: function() {
+
+              var selYrMon = (this.currentYear)+'-'+(this.currentMonth+1);
+        	  $("#calSelYrMonth").val(selYrMon);
+        	  var selYrMonArray = selYrMon.split("-");
+
+        	  var currDt = new Date();
+        	  var currMon =  currDt.getMonth();
+        	  if(selYrMonArray[1]< empDojMon+1 || selYrMonArray[1] > currMon+1 ) {
+        	 	 	 $("#res_div_link").hide();
+        	  } else {
+        			 $("#res_div_link").show();
+          	  }
+          	}
+         }); */
+    });
+
+
+
+
+    function show_hide_ul() {
+
+        if($('.week_select_list').css('display') == 'none')	{
+
+            $('.week_select_list').css('display','block');
+        }
+        else {
+            $('.week_select_list').css('display','none');
+        }
+    }
+
+</script>
+
+
+<?php
+
+
+$firstCalWeek = strftime('%U',strtotime($currentMonth.'-1'));
+$currCalWeek = strftime('%U',strtotime($currentMonth.'-'.$now->format('d')));
+
+
+
+$currWeekNo = ($currCalWeek- $firstCalWeek) +1;
+$totWeeks = $noOfweeks;
+if($currentMonth == $now->format('Y-m'))
+    $totWeeks = $currWeekNo;
+$selWeek = 1;
+?>
+
+
+
+
+
+
+
+<input type="hidden" name="calSelYrMonth" id="calSelYrMonth" />
+<div class="full_container">
+    <?php
+
+    //echo date("W", strtotime('2015-12-30'));
+    //echo "\n".gmstrftime('%U',mktime(0,0,0,06,29,2015));
+
+
+    $selectedYrMon = explode('-', $currentMonth);
+    //$selMonName = date('F', mktime(0, 0, 0, $selectedYrMon[1], 10));
+    $firstday = date("w", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0]));
+    $lastday = date("t", mktime(0, 0, 0, $selectedYrMon[1], 1, $selectedYrMon[0]));
+    $noOfweeks = 1 + ceil(($lastday-7+$firstday)/7);
+
+
+    $selWeek = $this->selWeek;
+    if($selectedYrMon[1] < 12)
+        $nextMonth = $selectedYrMon[1]+1;
+    else
+    {
+        // $nextMonth = $selectedYrMon[1];
+        $nextMonth = 1;
+        $selectedYrMon[0] = $selectedYrMon[0]+1;
+    }
+    //	$nextMonth = $selectedYrMon[1]+1;
+    $datesArray =  iterator_to_array(new DatePeriod(new DateTime("first sunday of $currentMonth"),
+        DateInterval::createFromDateString('next sunday'),new DateTime("first day of $selectedYrMon[0]-$nextMonth")));
+
+    //    	foreach($datesArray as $sunday) {
+    //    			//echo $sunday->format("Y-m-d\n");
+    //		}
+
+    $firstDay = DateTime::createFromFormat('Y-m-d', "$currentMonth".'-1');
+    $firstDayName =  $firstDay->format('D');
+    $wCounter = 1;
+    if($firstDayName != 'Sun')  $wCounter = 2;
+
+    if($selWeek == 1) {
+        $startDate = $currentMonth."-1";
+        $startDateName = date('D', strtotime($startDate));
+        if($startDateName != "Sun") {
+            $weekStartDay = date('F d, Y', strtotime('last sunday', strtotime($startDate)));
+        } else {
+            $weekStartDay = date('F d, Y', strtotime($startDate));
+        }
+    } else  {
+        $startDate = $datesArray[($selWeek-$wCounter)]->format("Y-m-d");
+        $weekStartDay = date('F d, Y', strtotime($startDate));
+    }
+    $weekendDay = date('F d, Y', strtotime('next saturday', strtotime($weekStartDay)));
+
+    $calWeekNo = strftime('%U',strtotime($weekStartDay));
+    ?>
+
+    <?php if($this->prev_str!=''){
+        $prev_str_split=preg_split('/@@@/',$this->prev_str);
+        ?>
+
+        <div class="ml-alert-1-error" id="close_div"  style="cursor: pointer;width: 90%;" onclick="javascript:window.location.href='<?php echo $this->baseUrl("index.php/timemanagement/index/index");?>'"><div class="style-1-icon error"></div><?php echo $prev_str_split[0];?> has not been submitted.</div>
+
+    <?php }?>
+    <span id="error_message"></span>
+    <div  class="control_option cal_single_view flt_lft" style="margin-top: 8px;">
+        <div class="new-form-ui month_picker">
+            <div class="division">
+                <input id="start_date" class="brdr_none hasDatepicker" type="text" onfocus="this.blur()" readonly="readonly" value="" name="start_date">
+                <img class="ui-datepicker-trigger" src="<?php echo $this->baseUrl().'/public/media/timemanagement/';?>images/cal_new.png" alt="" title="">
+            </div>
+        </div>
+    </div>
+
+    <div style="clear:both;"></div>
+
+
+
+
+
+<div class="result-container">
+    <?php foreach ($projectWiseWeeklyAggregatedData as $weekData): ?>
+        <?php
+            $sun_tot = 0;
+            $sun_billable_tot = 0;
+            $sun_unbillable_tot = 0;
+
+            $mon_tot = 0;
+            $mon_billable_tot = 0;
+            $mon_unbillable_tot = 0;
+
+            $tue_tot = 0;
+            $tue_billable_tot = 0;
+            $tue_unbillable_tot = 0;
+
+            $wed_tot = 0;
+            $wed_billable_tot = 0;
+            $wed_unbillable_tot = 0;
+
+            $thu_tot = 0;
+            $thu_billable_tot = 0;
+            $thu_unbillable_tot = 0;
+
+            $fri_tot = 0;
+            $fri_billable_tot = 0;
+            $fri_unbillable_tot = 0;
+
+            $sat_tot = 0;
+            $sat_billable_tot = 0;
+            $sat_unbillable_tot = 0;
+
+            $week_tot = 0;
+            $week_billable_tot = 0;
+            $week_unbillable_tot = 0;
+        ?>
+        <h1 class="timesheetbyproject_h1">Week <?php echo $weekData[0]['ts_week']; ?></h1>
+        <table id="weekview" class="timemanagementbyproject_weekly_table enter_time_week enter_time_week_view table table-condensed ui-accordion ui-widget ui-helper-reset" style="border-collapse: collapse;" width="80%" border="0" cellspacing="0" cellpadding="0" role="tablist">
+            <thead>
+                <tr>
+                    <th class="project_name">Project</th>
+                    <th id="th_sun" class="week_th  weekend">
+                        <span class="week_txt">Sun</span><span class="date_txt"><?php echo date_format(date_create($weekData[0]['sun_date']), 'd M, yy') ?></span>
+                    </th>
+                    <th id="th_mon" class="week_th  ">
+                        <span class="week_txt">Mon</span><span class="date_txt"><?php echo date_format(date_create($weekData[0]['mon_date']), 'd M, yy') ?></span>
+                    </th>
+                    <th id="th_tue" class="week_th  ">
+                        <span class="week_txt">Tue</span><span class="date_txt"><?php echo date_format(date_create($weekData[0]['tue_date']), 'd M, yy') ?></span>
+
+                    </th>
+                    <th id="th_wed" class="week_th  ">
+                        <span class="week_txt">Wed</span><span class="date_txt"><?php echo date_format(date_create($weekData[0]['wed_date']), 'd M, yy') ?></span>
+                    </th>
+                    <th id="th_thu" class="week_th   ">
+                        <span class="week_txt">Thu</span><span class="date_txt"><?php echo date_format(date_create($weekData[0]['thu_date']), 'd M, yy') ?></span>
+                    </th>
+                    <th id="th_fri" class="week_th  ">
+                        <span class="week_txt">Fri</span><span class="date_txt"><?php echo date_format(date_create($weekData[0]['fri_date']), 'd M, yy') ?></span>
+                    </th>
+                    <th id="th_sat" class="week_th  weekend">
+                        <span class="week_txt">Sat</span><span class="date_txt"><?php echo date_format(date_create($weekData[0]['sat_date']), 'd M, yy') ?></span>
+                    </th>
+                    <th class="total_pro_hrs_txt"></th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($weekData as $projectWeekData): ?>
+                <tr id="<?php echo 'week_' . $projectWeekData['ts_week'] . '_project_' . $projectWeekData['project_id'] ?>"  class="proj_task_col">
+                    <td><?php echo $projectWeekData['project_name']; ?></td>
+                    <td id="<?php echo 'week_' . $projectWeekData['ts_week'] . '_project_' . $projectWeekData['project_id'] . '_sun_hours'; ?>">
+                        <div class="billable_hours">
+                            <span class="label">Billable </span>
+                            <span class="value"><?php echo $projectWeekData['sun_duration_billable']; ?></span>
+                        </div>
+                        <div class="unbillable_hours">
+                            <span class="label">Non-billable </span>
+                            <span class="value"><?php echo $projectWeekData['sun_duration_unbillable']; ?></span>
+                        </div>
+                        <div class="total_hours">
+                            <span class="label">Total </span>
+                            <span class="value"><?php echo $projectWeekData['sun_duration']; ?></span>
+                        </div>
+                    </td>
+                    <td id="<?php echo 'week_' . $projectWeekData['ts_week'] . '_project_' . $projectWeekData['project_id'] . '_mon_hours'; ?>">
+                        <div class="billable_hours">
+                            <span class="label">Billable </span>
+                            <span class="value"><?php echo $projectWeekData['mon_duration_billable']; ?></span>
+                        </div>
+                        <div class="unbillable_hours">
+                            <span class="label">Non-billable </span>
+                            <span class="value"><?php echo $projectWeekData['mon_duration_unbillable']; ?></span>
+                        </div>
+                        <div class="total_hours">
+                            <span class="label">Total </span>
+                            <span class="value"><?php echo $projectWeekData['mon_duration']; ?></span>
+                        </div>
+                    </td>
+                    <td id="<?php echo 'week_' . $projectWeekData['ts_week'] . '_project_' . $projectWeekData['project_id'] . '_tue_hours'; ?>">
+                        <div class="billable_hours">
+                            <span class="label">Billable </span>
+                            <span class="value"><?php echo $projectWeekData['tue_duration_billable']; ?></span>
+                        </div>
+                        <div class="unbillable_hours">
+                            <span class="label">Non-billable </span>
+                            <span class="value"><?php echo $projectWeekData['tue_duration_unbillable']; ?></span>
+                        </div>
+                        <div class="total_hours">
+                            <span class="label">Total </span>
+                            <span class="value"><?php echo $projectWeekData['tue_duration']; ?></span>
+                        </div>
+                    </td>
+                    <td id="<?php echo 'week_' . $projectWeekData['ts_week'] . '_project_' . $projectWeekData['project_id'] . '_wed_hours'; ?>">
+                        <div class="billable_hours">
+                            <span class="label">Billable </span>
+                            <span class="value"><?php echo $projectWeekData['wed_duration_billable']; ?></span>
+                        </div>
+                        <div class="unbillable_hours">
+                            <span class="label">Non-billable </span>
+                            <span class="value"><?php echo $projectWeekData['wed_duration_unbillable']; ?></span>
+                        </div>
+                        <div class="total_hours">
+                            <span class="label">Total </span>
+                            <span class="value"><?php echo $projectWeekData['wed_duration']; ?></span>
+                        </div>
+                    </td>
+                    <td id="<?php echo 'week_' . $projectWeekData['ts_week'] . '_project_' . $projectWeekData['project_id'] . '_thu_hours'; ?>">
+                        <div class="billable_hours">
+                            <span class="label">Billable </span>
+                            <span class="value"><?php echo $projectWeekData['thu_duration_billable']; ?></span>
+                        </div>
+                        <div class="unbillable_hours">
+                            <span class="label">Non-billable </span>
+                            <span class="value"><?php echo $projectWeekData['thu_duration_unbillable']; ?></span>
+                        </div>
+                        <div class="total_hours">
+                            <span class="label">Total </span>
+                            <span class="value"><?php echo $projectWeekData['thu_duration']; ?></span>
+                        </div>
+                    </td>
+                    <td id="<?php echo 'week_' . $projectWeekData['ts_week'] . '_project_' . $projectWeekData['project_id'] . '_fri_hours'; ?>">
+                        <div class="billable_hours">
+                            <span class="label">Billable </span>
+                            <span class="value"><?php echo $projectWeekData['fri_duration_billable']; ?></span>
+                        </div>
+                        <div class="unbillable_hours">
+                            <span class="label">Non-billable </span>
+                            <span class="value"><?php echo $projectWeekData['fri_duration_unbillable']; ?></span>
+                        </div>
+                        <div class="total_hours">
+                            <span class="label">Total </span>
+                            <span class="value"><?php echo $projectWeekData['fri_duration']; ?></span>
+                        </div>
+                    </td>
+                    <td id="<?php echo 'week_' . $projectWeekData['ts_week'] . '_project_' . $projectWeekData['project_id'] . '_sat_hours'; ?>">
+                        <div class="billable_hours">
+                            <span class="label">Billable </span>
+                            <span class="value"><?php echo $projectWeekData['sat_duration_billable']; ?></span>
+                        </div>
+                        <div class="unbillable_hours">
+                            <span class="label">Non-billable </span>
+                            <span class="value"><?php echo $projectWeekData['sat_duration_unbillable']; ?></span>
+                        </div>
+                        <div class="total_hours">
+                            <span class="label">Total </span>
+                            <span class="value"><?php echo $projectWeekData['sat_duration']; ?></span>
+                        </div>
+                    </td>
+                    <td id="<?php echo 'week_' . $projectWeekData['ts_week'] . '_project_' . $projectWeekData['project_id'] . '_week_hours'; ?>">
+                        <div class="billable_hours">
+                            <span class="label">Billable </span>
+                            <span class="value"><?php echo $projectWeekData['week_duration_billable']; ?></span>
+                        </div>
+                        <div class="unbillable_hours">
+                            <span class="label">Non-billable </span>
+                            <span class="value"><?php echo $projectWeekData['week_duration_unbillable']; ?></span>
+                        </div>
+                        <div class="total_hours">
+                            <span class="label">Total </span>
+                            <span class="value"><?php echo $projectWeekData['week_duration']; ?></span>
+                        </div>
+                    </td>
+                </tr>
+                <?php
+                    $sun_tot += (explode(':',$projectWeekData['sun_duration'])[0] * 60 + explode(':',$projectWeekData['sun_duration'])[1]);
+                    $sun_billable_tot += (explode(':',$projectWeekData['sun_duration_billable'])[0] * 60 + explode(':',$projectWeekData['sun_duration_billable'])[1]);
+                    $sun_unbillable_tot += (explode(':',$projectWeekData['sun_duration_unbillable'])[0] * 60 + explode(':',$projectWeekData['sun_duration_unbillable'])[1]);
+
+                    $mon_tot += (explode(':',$projectWeekData['mon_duration'])[0] * 60 + explode(':',$projectWeekData['mon_duration'])[1]);
+                    $mon_billable_tot += (explode(':',$projectWeekData['mon_duration_billable'])[0] * 60 + explode(':',$projectWeekData['mon_duration_billable'])[1]);
+                    $mon_unbillable_tot += (explode(':',$projectWeekData['mon_duration_unbillable'])[0] * 60 + explode(':',$projectWeekData['mon_duration_unbillable'])[1]);
+
+                    $tue_tot += (explode(':',$projectWeekData['tue_duration'])[0] * 60 + explode(':',$projectWeekData['tue_duration'])[1]);
+                    $tue_billable_tot += (explode(':',$projectWeekData['tue_duration_billable'])[0] * 60 + explode(':',$projectWeekData['tue_duration_billable'])[1]);
+                    $tue_unbillable_tot += (explode(':',$projectWeekData['tue_duration_unbillable'])[0] * 60 + explode(':',$projectWeekData['tue_duration_unbillable'])[1]);
+
+                    $wed_tot += (explode(':',$projectWeekData['wed_duration'])[0] * 60 + explode(':',$projectWeekData['wed_duration'])[1]);
+                    $wed_billable_tot += (explode(':',$projectWeekData['wed_duration_billable'])[0] * 60 + explode(':',$projectWeekData['wed_duration_billable'])[1]);
+                    $wed_unbillable_tot += (explode(':',$projectWeekData['wed_duration_unbillable'])[0] * 60 + explode(':',$projectWeekData['wed_duration_unbillable'])[1]);
+
+                    $thu_tot += (explode(':',$projectWeekData['thu_duration'])[0] * 60 + explode(':',$projectWeekData['thu_duration'])[1]);
+                    $thu_billable_tot += (explode(':',$projectWeekData['thu_duration_billable'])[0] * 60 + explode(':',$projectWeekData['thu_duration_billable'])[1]);
+                    $thu_unbillable_tot += (explode(':',$projectWeekData['thu_duration_unbillable'])[0] * 60 + explode(':',$projectWeekData['thu_duration_unbillable'])[1]);
+
+                    $fri_tot += (explode(':',$projectWeekData['fri_duration'])[0] * 60 + explode(':',$projectWeekData['fri_duration'])[1]);
+                    $fri_billable_tot += (explode(':',$projectWeekData['fri_duration_billable'])[0] * 60 + explode(':',$projectWeekData['fri_duration_billable'])[1]);
+                    $fri_unbillable_tot += (explode(':',$projectWeekData['fri_duration_unbillable'])[0] * 60 + explode(':',$projectWeekData['fri_duration_unbillable'])[1]);
+
+                    $sat_tot += (explode(':',$projectWeekData['sat_duration'])[0] * 60 + explode(':',$projectWeekData['sat_duration'])[1]);
+                    $sat_billable_tot += (explode(':',$projectWeekData['sat_duration_billable'])[0] * 60 + explode(':',$projectWeekData['sat_duration_billable'])[1]);
+                    $sat_unbillable_tot += (explode(':',$projectWeekData['sat_duration_unbillable'])[0] * 60 + explode(':',$projectWeekData['sat_duration_unbillable'])[1]);
+
+                    $week_tot += (explode(':',$projectWeekData['week_duration'])[0] * 60 + explode(':',$projectWeekData['week_duration'])[1]);
+                    $week_billable_tot += (explode(':',$projectWeekData['week_duration_billable'])[0] * 60 + explode(':',$projectWeekData['week_duration_billable'])[1]);
+                    $week_unbillable_tot += (explode(':',$projectWeekData['week_duration_unbillable'])[0] * 60 + explode(':',$projectWeekData['week_duration_unbillable'])[1]);
+
+                ?>
+
+            <?php endforeach; ?>
+
+            <tr id="<?php echo 'week_' . $projectWeekData['ts_week'] . '_totals' ?>"  class="proj_task_col">
+                <td></td>
+                <td id="<?php echo 'week_' . $projectWeekData['ts_week'] . '_totals_sun_hours'; ?>">
+                    <div class="billable_hours">
+                        <span class="label">Billable </span>
+                        <span class="value">
+                            <?php
+                            $sunHrsPart = floor($sun_billable_tot / 60);
+                            $sunMinsPart = $sun_billable_tot % 60;
+                            if(strlen($sunHrsPart.'') == 1) $sunHrsPart = '0'.$sunHrsPart;
+                            if(strlen($sunMinsPart.'') == 1) $sunMinsPart = '0'.$sunMinsPart;
+                            echo $sunHrsPart.':'.$sunMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                    <div class="unbillable_hours">
+                        <span class="label">Non-billable </span>
+                        <span class="value">
+                            <?php
+                            $sunHrsPart = floor($sun_unbillable_tot / 60);
+                            $sunMinsPart = $sun_unbillable_tot % 60;
+                            if(strlen($sunHrsPart.'') == 1) $sunHrsPart = '0'.$sunHrsPart;
+                            if(strlen($sunMinsPart.'') == 1) $sunMinsPart = '0'.$sunMinsPart;
+                            echo $sunHrsPart.':'.$sunMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                    <div class="total_hours">
+                        <span class="label">Total </span>
+                        <span class="value">
+                            <?php
+                            $sunHrsPart = floor($sun_tot / 60);
+                            $sunMinsPart = $sun_tot % 60;
+                            if(strlen($sunHrsPart.'') == 1) $sunHrsPart = '0'.$sunHrsPart;
+                            if(strlen($sunMinsPart.'') == 1) $sunMinsPart = '0'.$sunMinsPart;
+                            echo $sunHrsPart.':'.$sunMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                </td>
+                <td id="<?php echo 'week_' . $projectWeekData['ts_week'] . '_totals_mon_hours'; ?>">
+                    <div class="billable_hours">
+                        <span class="label">Billable </span>
+                        <span class="value">
+                            <?php
+                            $monHrsPart = floor($mon_billable_tot / 60);
+                            $monMinsPart = $mon_billable_tot % 60;
+                            if(strlen($monHrsPart.'') == 1) $monHrsPart = '0'.$monHrsPart;
+                            if(strlen($monMinsPart.'') == 1) $monMinsPart = '0'.$monMinsPart;
+                            echo $monHrsPart.':'.$monMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                    <div class="unbillable_hours">
+                        <span class="label">Non-billable </span>
+                        <span class="value">
+                            <?php
+                            $monHrsPart = floor($mon_unbillable_tot / 60);
+                            $monMinsPart = $mon_unbillable_tot % 60;
+                            if(strlen($monHrsPart.'') == 1) $monHrsPart = '0'.$monHrsPart;
+                            if(strlen($monMinsPart.'') == 1) $monMinsPart = '0'.$monMinsPart;
+                            echo $monHrsPart.':'.$monMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                    <div class="total_hours">
+                        <span class="label">Total </span>
+                        <span class="value">
+                            <?php
+                            $monHrsPart = floor($mon_tot / 60);
+                            $monMinsPart = $mon_tot % 60;
+                            if(strlen($monHrsPart.'') == 1) $monHrsPart = '0'.$monHrsPart;
+                            if(strlen($monMinsPart.'') == 1) $monMinsPart = '0'.$monMinsPart;
+                            echo $monHrsPart.':'.$monMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                </td>
+                <td id="<?php echo 'week_' . $projectWeekData['ts_week'] . '_totals_tue_hours'; ?>">
+                    <div class="billable_hours">
+                        <span class="label">Billable </span>
+                        <span class="value">
+                            <?php
+                            $tueHrsPart = floor($tue_billable_tot / 60);
+                            $tueMinsPart = $tue_billable_tot % 60;
+                            if(strlen($tueHrsPart.'') == 1) $tueHrsPart = '0'.$tueHrsPart;
+                            if(strlen($tueMinsPart.'') == 1) $tueMinsPart = '0'.$tueMinsPart;
+                            echo $tueHrsPart.':'.$tueMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                    <div class="unbillable_hours">
+                        <span class="label">Non-billable </span>
+                        <span class="value">
+                            <?php
+                            $tueHrsPart = floor($tue_unbillable_tot / 60);
+                            $tueMinsPart = $tue_unbillable_tot % 60;
+                            if(strlen($tueHrsPart.'') == 1) $tueHrsPart = '0'.$tueHrsPart;
+                            if(strlen($tueMinsPart.'') == 1) $tueMinsPart = '0'.$tueMinsPart;
+                            echo $tueHrsPart.':'.$tueMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                    <div class="total_hours">
+                        <span class="label">Total </span>
+                        <span class="value">
+                            <?php
+                            $tueHrsPart = floor($tue_tot / 60);
+                            $tueMinsPart = $tue_tot % 60;
+                            if(strlen($tueHrsPart.'') == 1) $tueHrsPart = '0'.$tueHrsPart;
+                            if(strlen($tueMinsPart.'') == 1) $tueMinsPart = '0'.$tueMinsPart;
+                            echo $tueHrsPart.':'.$tueMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                </td>
+                <td id="<?php echo 'week_' . $projectWeekData['ts_week'] . '_totals_wed_hours'; ?>">
+                    <div class="billable_hours">
+                        <span class="label">Billable </span>
+                        <span class="value">
+                            <?php
+                            $wedHrsPart = floor($wed_billable_tot / 60);
+                            $wedMinsPart = $wed_billable_tot % 60;
+                            if(strlen($wedHrsPart.'') == 1) $wedHrsPart = '0'.$wedHrsPart;
+                            if(strlen($wedMinsPart.'') == 1) $wedMinsPart = '0'.$wedMinsPart;
+                            echo $wedHrsPart.':'.$wedMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                    <div class="unbillable_hours">
+                        <span class="label">Non-billable </span>
+                        <span class="value">
+                            <?php
+                            $wedHrsPart = floor($wed_unbillable_tot / 60);
+                            $wedMinsPart = $wed_unbillable_tot % 60;
+                            if(strlen($wedHrsPart.'') == 1) $wedHrsPart = '0'.$wedHrsPart;
+                            if(strlen($wedMinsPart.'') == 1) $wedMinsPart = '0'.$wedMinsPart;
+                            echo $wedHrsPart.':'.$wedMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                    <div class="total_hours">
+                        <span class="label">Total </span>
+                        <span class="value">
+                            <?php
+                            $wedHrsPart = floor($wed_tot / 60);
+                            $wedMinsPart = $wed_tot % 60;
+                            if(strlen($wedHrsPart.'') == 1) $wedHrsPart = '0'.$wedHrsPart;
+                            if(strlen($wedMinsPart.'') == 1) $wedMinsPart = '0'.$wedMinsPart;
+                            echo $wedHrsPart.':'.$wedMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                </td>
+                <td id="<?php echo 'week_' . $projectWeekData['ts_week'] . '_totals_thu_hours'; ?>">
+                    <div class="billable_hours">
+                        <span class="label">Billable </span>
+                        <span class="value">
+                            <?php
+                            $thuHrsPart = floor($thu_billable_tot / 60);
+                            $thuMinsPart = $thu_billable_tot % 60;
+                            if(strlen($thuHrsPart.'') == 1) $thuHrsPart = '0'.$thuHrsPart;
+                            if(strlen($thuMinsPart.'') == 1) $thuMinsPart = '0'.$thuMinsPart;
+                            echo $thuHrsPart.':'.$thuMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                    <div class="unbillable_hours">
+                        <span class="label">Non-billable </span>
+                        <span class="value">
+                            <?php
+                            $thuHrsPart = floor($thu_unbillable_tot / 60);
+                            $thuMinsPart = $thu_unbillable_tot % 60;
+                            if(strlen($thuHrsPart.'') == 1) $thuHrsPart = '0'.$thuHrsPart;
+                            if(strlen($thuMinsPart.'') == 1) $thuMinsPart = '0'.$thuMinsPart;
+                            echo $thuHrsPart.':'.$thuMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                    <div class="total_hours">
+                        <span class="label">Total </span>
+                        <span class="value">
+                            <?php
+                            $thuHrsPart = floor($thu_tot / 60);
+                            $thuMinsPart = $thu_tot % 60;
+                            if(strlen($thuHrsPart.'') == 1) $thuHrsPart = '0'.$thuHrsPart;
+                            if(strlen($thuMinsPart.'') == 1) $thuMinsPart = '0'.$thuMinsPart;
+                            echo $thuHrsPart.':'.$thuMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                </td>
+                <td id="<?php echo 'week_' . $projectWeekData['ts_week'] . '_totals_fri_hours'; ?>">
+                    <div class="billable_hours">
+                        <span class="label">Billable </span>
+                        <span class="value">
+                            <?php
+                            $friHrsPart = floor($fri_billable_tot / 60);
+                            $friMinsPart = $fri_billable_tot % 60;
+                            if(strlen($friHrsPart.'') == 1) $friHrsPart = '0'.$friHrsPart;
+                            if(strlen($friMinsPart.'') == 1) $friMinsPart = '0'.$friMinsPart;
+                            echo $friHrsPart.':'.$friMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                    <div class="unbillable_hours">
+                        <span class="label">Non-billable </span>
+                        <span class="value">
+                            <?php
+                            $friHrsPart = floor($fri_unbillable_tot / 60);
+                            $friMinsPart = $fri_unbillable_tot % 60;
+                            if(strlen($friHrsPart.'') == 1) $friHrsPart = '0'.$friHrsPart;
+                            if(strlen($friMinsPart.'') == 1) $friMinsPart = '0'.$friMinsPart;
+                            echo $friHrsPart.':'.$friMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                    <div class="total_hours">
+                        <span class="label">Total </span>
+                        <span class="value">
+                            <?php
+                            $friHrsPart = floor($fri_tot / 60);
+                            $friMinsPart = $fri_tot % 60;
+                            if(strlen($friHrsPart.'') == 1) $friHrsPart = '0'.$friHrsPart;
+                            if(strlen($friMinsPart.'') == 1) $friMinsPart = '0'.$friMinsPart;
+                            echo $friHrsPart.':'.$friMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                </td>
+                <td id="<?php echo 'week_' . $projectWeekData['ts_week'] . '_totals_sat_hours'; ?>">
+                    <div class="billable_hours">
+                        <span class="label">Billable </span>
+                        <span class="value">
+                            <?php
+                            $satHrsPart = floor($sat_billable_tot / 60);
+                            $satMinsPart = $sat_billable_tot % 60;
+                            if(strlen($satHrsPart.'') == 1) $satHrsPart = '0'.$satHrsPart;
+                            if(strlen($satMinsPart.'') == 1) $satMinsPart = '0'.$satMinsPart;
+                            echo $satHrsPart.':'.$satMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                    <div class="unbillable_hours">
+                        <span class="label">Non-billable </span>
+                        <span class="value">
+                            <?php
+                            $satHrsPart = floor($sat_unbillable_tot / 60);
+                            $satMinsPart = $sat_unbillable_tot % 60;
+                            if(strlen($satHrsPart.'') == 1) $satHrsPart = '0'.$satHrsPart;
+                            if(strlen($satMinsPart.'') == 1) $satMinsPart = '0'.$satMinsPart;
+                            echo $satHrsPart.':'.$satMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                    <div class="total_hours">
+                        <span class="label">Total </span>
+                        <span class="value">
+                            <?php
+                            $satHrsPart = floor($sat_tot / 60);
+                            $satMinsPart = $sat_tot % 60;
+                            if(strlen($satHrsPart.'') == 1) $satHrsPart = '0'.$satHrsPart;
+                            if(strlen($satMinsPart.'') == 1) $satMinsPart = '0'.$satMinsPart;
+                            echo $satHrsPart.':'.$satMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                </td>
+                <td id="<?php echo 'week_' . $projectWeekData['ts_week'] . '_totals_week_hours'; ?>">
+                    <div class="billable_hours">
+                        <span class="label">Billable </span>
+                        <span class="value">
+                            <?php
+                            $weekHrsPart = floor($week_billable_tot / 60);
+                            $weekMinsPart = $week_billable_tot % 60;
+                            if(strlen($weekHrsPart.'') == 1) $weekHrsPart = '0'.$weekHrsPart;
+                            if(strlen($weekMinsPart.'') == 1) $weekMinsPart = '0'.$weekMinsPart;
+                            echo $weekHrsPart.':'.$weekMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                    <div class="unbillable_hours">
+                        <span class="label">Non-billable </span>
+                        <span class="value">
+                            <?php
+                            $weekHrsPart = floor($week_unbillable_tot / 60);
+                            $weekMinsPart = $week_unbillable_tot % 60;
+                            if(strlen($weekHrsPart.'') == 1) $weekHrsPart = '0'.$weekHrsPart;
+                            if(strlen($weekMinsPart.'') == 1) $weekMinsPart = '0'.$weekMinsPart;
+                            echo $weekHrsPart.':'.$weekMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                    <div class="total_hours">
+                        <span class="label">Total </span>
+                        <span class="value">
+                            <?php
+                            $weekHrsPart = floor($week_tot / 60);
+                            $weekMinsPart = $week_tot % 60;
+                            if(strlen($weekHrsPart.'') == 1) $weekHrsPart = '0'.$weekHrsPart;
+                            if(strlen($weekMinsPart.'') == 1) $weekMinsPart = '0'.$weekMinsPart;
+                            echo $weekHrsPart.':'.$weekMinsPart;
+                            ?>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+
+            </tbody>
+
+        </table>
+    <?php endforeach; ?>
+</div>
+<input type="hidden" value="2020-11-01" id="empDoj" />
+<script type="text/javascript" language="javascript" >
+    $(document).ready(function(){
+
+        var empDoj = $('#empDoj').val();
+        var dt = null;
+        if(empDoj != '')
+            dt = new Date(empDoj.split("-").join("/"));
+        else
+            dt = new Date();
+        var empDojYr = dt.getFullYear();
+        var selYrMon = "<?php echo $currentMonth; ?>";
+        var selYrMonArray =  selYrMon.split("-");
+        options = {
+            pattern: 'yyyy-mm', // Default is 'mm/yyyy' and separator char is not mandatory
+            selectedYear: parseInt(selYrMonArray[0],10),
+            startYear: empDojYr,
+            finalYear: <?php echo date('Y');?>,
+        };
+
+        $('#start_date').monthpicker(options);
+        $('#start_date').monthpicker().bind('monthpicker-click-month', function (e, month) {
+            var year_month=$('#start_date').val();
+            var selmn_split=year_month.split('-');
+            var month_names=new Array('','January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+            //  $('#start_date').val(month_names[parseFloat(selmn_split[1])]+'-'+selmn_split[0])
+            $('#start_date').val(month_names[parseFloat(selmn_split[1])]+' '+selmn_split[0])
+            $('#idhidselmn').val(year_month);
+            var act=$( "#idempaccordion" ).accordion( "option", "active");
+            if(act!==false && act>=0)
+                act=act;
+            else
+                act=false;
+            var selmn=year_month;
+            var dobj=new Date();
+            var dyear=dobj.getFullYear();
+            var dmonth=dobj.getMonth();
+            dmonth=parseFloat(dmonth)+1;
+            if(parseFloat(dmonth)<10)
+            {
+                dmonth='0'+dmonth;
+            }
+            var dselmn=dyear+'-'+dmonth;
+
+            $("#calSelYrMonth").val(year_month);
+            ProjectViewTimeEntry(year_month);
+
+        }).bind('monthpicker-change-year', function (e, year) {
+
+            var dobj=new Date();
+            var dyear=dobj.getFullYear();
+            var dmonth=parseFloat(dobj.getMonth());
+            if(year==dyear)
+            {
+                var dis_months=new Array();
+                for(i=(dmonth+2);i<=12;i++)
+                {
+                    dis_months[i]=i;
+                }
+                $('#start_date').monthpicker('disableMonths', dis_months);
+            }
+            else
+            {
+                if(year == empDojYr) {
+                    var dis_months=new Array();
+                    for(i=1;i<(empDojMon+1);i++)
+                    {
+                        dis_months[i]=i;
+                    }
+                    $('#start_date').monthpicker('disableMonths', dis_months);
+                } else {
+                    $('#start_date').monthpicker('disableMonths', []);
+                }
+                //$('#start_date').monthpicker('disableMonths', []);
+            }
+
+        });
+        var dobj=new Date();
+        var empDojMon = dt.getMonth();
+        var empDojyr = dt.getFullYear();
+        var curMonth = dobj.getMonth();
+        //var dmonth=parseFloat(dobj.getMonth());
+        var dyear=dobj.getFullYear();
+        var dmonth=parseFloat(empDojMon);
+        var dis_months=new Array();
+        //for(i=(dmonth+2);i<=12;i++)
+        //if(empDojyr == dyear) {
+        if(empDojYr == selYrMonArray[0]) {
+
+            for(i=1;i<(dmonth+1);i++)
+            {
+                dis_months[i]=i;
+            }
+            if(empDojYr == dobj.getFullYear()) {
+                for(j=(curMonth+2);j<=12;j++)
+                {
+                    dis_months[j]=j;
+                }
+            }
+        } else if(selYrMonArray[0] == dobj.getFullYear()) {
+
+            for(j=(curMonth+2);j<=12;j++)
+            {
+                dis_months[j]=j;
+            }
+        }
+
+        $('#start_date').monthpicker('disableMonths', dis_months);
+        //var dt = new Date(selYrMonArray[0]+"-"+selYrMonArray[1]+"-01");
+        var dt = new Date(selYrMonArray[0]+'/'+selYrMonArray[1]+'/'+"01");
+        var month = new Array();
+        month[0] = "January";
+        month[1] = "February";
+        month[2] = "March";
+        month[3] = "April";
+        month[4] = "May";
+        month[5] = "June";
+        month[6] = "July";
+        month[7] = "August";
+        month[8] = "September";
+        month[9] = "October";
+        month[10] = "November";
+        month[11] = "December";
+
+        $('#start_date').val(month[dt.getMonth()]+" "+dt.getFullYear());
+    });
+</script>

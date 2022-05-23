@@ -1,0 +1,8 @@
+INSTALL.txt
+LICENSE.txt
+demos/
+extras/documentation
+/*.bak
+
+
+public/uploads/*
