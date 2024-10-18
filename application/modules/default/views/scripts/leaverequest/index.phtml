@@ -552,17 +552,11 @@ Click on a date to apply for 1 day of leave. Click and drag on the desired dates
         <div class="total-form-controller">
 		      
 		    <div class="new-form-ui">
-			  <label class="required">Earned Leaves</label>
-			<div class="division">
-                <input type="text" name="no_of_days" id="no_of_days" value="<?php echo $this->employeeLeaveData['earned_leaves'] ?>" readonly="readonly" onfocus="this.blur()">
-            </div>
+			  <label class="required">Available Leaves</label>
+			<div class="division"><?php echo $this->form->no_of_days; ?></div>
 			<?php if(isset($this->msgarray['no_of_days'])){?>
 			   <span class="errors" id="errors-<?php echo $this->form->no_of_days->getId(); ?>"><?php echo $this->msgarray['no_of_days'];?></span>
 			<?php }?>
-                <div style="clear:both;">
-                    <p class="imp-text-orange">Earned Casual Leaves : <strong> <?php echo $this->employeeLeaveData['earned_casual_leaves']; ?></strong></p>
-                    <p class="imp-text-orange">Earned Annual Leaves : <strong><?php echo $this->employeeLeaveData['earned_annual_leaves']; ?></strong></p>
-                </div>
 			</div>
 			
 			<div class="new-form-ui">
@@ -613,10 +607,8 @@ Click on a date to apply for 1 day of leave. Click and drag on the desired dates
 			   <span class="errors" id="errors-<?php echo $this->form->rep_mang_id->getId(); ?>"><?php echo $this->msgarray['rep_mang_id'];?></span>
 			<?php }?>
 			</div>
-            <div class="new-form-ui">
-                <p class="imp-text-orange font-size-15" style="clear:both">
-                    <strong>NOTE:</strong><br> If you are applying for consecutive 3 or more leaves, please apply them as annual leaves. You can however use annual leave if casual leave(s) are not available</p>
-            </div>
+								
+			
         </div>
 		
 		<div class="new-form-ui-submit">

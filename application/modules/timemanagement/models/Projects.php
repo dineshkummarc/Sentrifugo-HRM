@@ -57,33 +57,37 @@ class Timemanagement_Model_Projects extends Zend_Db_Table_Abstract
 	 * @param number $perPage
 	 * @param string $searchQuery
 	 *
-	 * @return mixed
+	 * @return array $projectsData
 	 */
-
+	 
 	public function getProjectsData($sort, $by, $pageNo, $perPage,$searchQuery)
 	{
-        $where = "mes.isactive = 1 ";
-        $projectsData = $this->select()->distinct()
-            ->setIntegrityCheck(false)
-            ->from(array('p' => $this->_name),
-                array(
-                    'id'=>'p.id',
-                    'project_name'=>'p.project_name',
-                    'project_type'=> 'p.project_type',
-                    'project_status'=>'if(p.project_status = "initiated", "Initiated",if(p.project_status = "draft" , "Draft",if (p.project_status = "in-progress","In Progress",if(p.project_status = "hold","Hold",if(p.project_status = "completed","Completed","")))))',
-                )
-            );
-        $projectsData->join(array('tpe'=>'tm_project_employees'),'tpe.project_id = p.id',array());
-        $projectsData->join(array('mes'=>'main_employees_summary'),'tpe.emp_id = mes.user_id',array('resources_on_project'=>"GROUP_CONCAT(DISTINCT if(tpe.is_active = 1, CONCAT(mes.userfullname, '(', mes.reporting_manager_name , ')'), NULL) order by mes.userfullname SEPARATOR ',')"));
+		$where = " p.is_active = 1 ";
+		if(Zend_Registry::get( 'tm_role' ) == 'Manager'){
+			$auth = Zend_Auth::getInstance();
+			if($auth->hasIdentity()){
+				$loginUserId = $auth->getStorage()->read()->id;
+			}
+			$where .= " AND pe.emp_id = '".$loginUserId."' AND pe.is_active = 1";
+		}
 
-        if($searchQuery)
-		    $where .= " AND ".$searchQuery;
+		if($searchQuery)
+		$where .= " AND ".$searchQuery;
+		$db = Zend_Db_Table::getDefaultAdapter();
 
-        $projectsData->group(['tpe.project_id']);
-
+		$projectsData = $this->select()->distinct()
+		->setIntegrityCheck(false)
+		->from(array('p' => $this->_name),array('id'=>'p.id','project_name'=>'p.project_name','project_status'=>'if(p.project_status = "initiated", "Initiated",if(p.project_status = "draft" , "Draft",if (p.project_status = "in-progress","In Progress",if(p.project_status = "hold","Hold",if(p.project_status = "completed","Completed","")))))','start_date'=>'p.start_date','end_date'=>'p.end_date','parent_project'=>'p2.project_name','project_type'=>'IF(p.project_type="billable","Billable",IF(p.project_type="non_billable","Non billable","Revenue generation"))'))
+		->joinLeft(array('p2' => $this->_name),'p.base_project = p2.id',array())
+		->joinLeft(array('c'=>'tm_clients'),'p.client_id=c.id',array('client_name'=>'c.client_name'))
+		->joinLeft(array('cur'=>'main_currency'),'p.currency_id = cur.id',array('currencyname'=>'cur.currencyname'));
+		if(Zend_Registry::get( 'tm_role' ) == 'Manager'){
+			$projectsData->joinLeft(array('pe'=>'tm_project_employees'),'pe.project_id = p.id',array());
+		}
 		$projectsData->where($where)
 		->order("$by $sort")
 		->limitPage($pageNo, $perPage);
+		//echo $projectsData;exit;
 
 		return $projectsData;
 	}
@@ -112,10 +116,17 @@ class Timemanagement_Model_Projects extends Zend_Db_Table_Abstract
 			$searchValues = json_decode($searchData);
 			foreach($searchValues as $key => $val)
 			{
-				if($key == 'project_status')
-                    $searchQuery .= " p.project_status = '".$val."' AND ";
-				if($key == 'project_type')
-                    $searchQuery .= " p.project_type = '".$val."' AND ";
+				if($key == 'client') $key = 'client_id';
+				if($key == 'currency') $key = 'currency_id';
+				if($key == 'parent_project'){
+					$searchQuery .= " p.base_project = '".$val."' AND ";
+				}else if($key == 'client_name'){
+					$searchQuery .= " c.id = '".$val."' AND ";
+				}else if($key == 'currencyname'){
+					$searchQuery .= " cur.id = '".$val."' AND ";
+				}else{
+					$searchQuery .= " p.".$key." like '%".$val."%' AND ";
+				}
 				$searchArray[$key] = $val;
 			}
 			$searchQuery = rtrim($searchQuery," AND");
@@ -123,7 +134,7 @@ class Timemanagement_Model_Projects extends Zend_Db_Table_Abstract
 
 		$objName = 'projects';
 
-		$tableFields = array('action'=>'Action','project_name' => 'Project','project_status'=>'Status', 'project_type'=> 'Project Type', 'resources_on_project' => 'Resources on Project');
+		$tableFields = array('action'=>'Action','project_name' => 'Project','project_status'=>'Status','parent_project'=>'Base Project','client_name' => 'Client','currencyname'=>'Currency','project_type'=>'Project Type');
 
 		$tablecontent = $this->getProjectsData($sort, $by, $pageNo, $perPage,$searchQuery);
 
@@ -173,6 +184,22 @@ class Timemanagement_Model_Projects extends Zend_Db_Table_Abstract
 			'call'=>$call,
 			'dashboardcall'=>$dashboardcall,
 		    'search_filters' => array(
+                    'client_name' => array(
+                        'type' => 'select',
+                        'filter_data' => $clientArray,
+		),
+                    'currencyname' => array(
+                        'type' => 'select',
+                        'filter_data' => $currencyArray,
+		),
+					'parent_project' => array(
+			                        'type' => 'select',
+			                        'filter_data' => $base_projectArray,
+		),
+                    'category' => array(
+                        'type' => 'select',
+                        'filter_data' => array(''=>'All','billable' => 'Billable','non_billable' => 'Non Billable','revenue' => 'Revenue generation'),
+		),
 					 'project_status' => array(
 			                        'type' => 'select',
 			                        'filter_data' => array(''=>'All','initiated' => 'Initiated','draft' => 'Draft','in-progress' => 'In Progress','hold'=>'Hold','completed'=>'Completed'),
@@ -180,6 +207,8 @@ class Timemanagement_Model_Projects extends Zend_Db_Table_Abstract
 					'project_type' => array('type' => 'select',
 						                      'filter_data' => array(''=>'All','billable' => 'Billable','non_billable' => 'Non Billable','revenue' => 'Revenue generation'),
 		),
+		//'start_date'=>array('type'=>'datepicker'),
+		//	  'end_date'=>array('type'=>'datepicker')
 		),
 		);
 		return $dataTmp;

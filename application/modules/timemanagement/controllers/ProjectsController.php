@@ -72,27 +72,26 @@ class Timemanagement_ProjectsController extends Zend_Controller_Action
 		if($refresh == 'refresh')
 		{
 			if($dashboardcall == 'Yes')
-			$perPage = SUBASSET;
+			$perPage = DASHBOARD_PERPAGE;
 			else
-			$perPage = SUBASSET;
-			$sort = 'ASC';$by = 'p.project_name';$pageNo = 1;$searchData = '';$searchQuery = '';$searchArray='';
+			$perPage = PERPAGE;
+			$sort = 'DESC';$by = 'p.modified';$pageNo = 1;$searchData = '';$searchQuery = '';$searchArray='';
 		}
 		else
 		{
-			$sort = ($this->_getParam('sort') !='')? $this->_getParam('sort'):'ASC';
-			$by = ($this->_getParam('by')!='')? $this->_getParam('by'):'p.project_name';
+			$sort = ($this->_getParam('sort') !='')? $this->_getParam('sort'):'DESC';
+			$by = ($this->_getParam('by')!='')? $this->_getParam('by'):'p.modified';
 			if($dashboardcall == 'Yes')
-			$perPage = $this->_getParam('per_page',SUBASSET);
+			$perPage = $this->_getParam('per_page',DASHBOARD_PERPAGE);
 			else
-			$perPage = $this->_getParam('per_page',SUBASSET);
+			$perPage = $this->_getParam('per_page',PERPAGE);
 			$pageNo = $this->_getParam('page', 1);
 			/** search from grid - START **/
-			$searchData = $this->_getParam('searchData') ?: '{"project_status":"in-progress","project_type":"billable"}';$searchQuery = '';$searchArray='';
+			$searchData = $this->_getParam('searchData');
 			$searchData = rtrim($searchData,',');
 			/** search from grid - END **/
 		}
 
-		$perPage = SUBASSET;
 		$dataTmp = $projectModel->getGrid($sort, $by, $perPage, $pageNo, $searchData,$call,$dashboardcall);
 			
 		array_push($data,$dataTmp);

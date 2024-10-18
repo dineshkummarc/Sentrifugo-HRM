@@ -37,7 +37,6 @@ else
  defined('SERVER_OS') || define('SERVER_OS','linux');
 }
 defined('LIMIT')|| define('LIMIT', 20);
-defined('INDEFINITELIMIT')|| define('INDEFINITELIMIT', 9999);
 defined('NA')|| define('NA', 0);
 defined('YEAR')|| define('YEAR', 1900);
 defined('PERPAGE')|| define('PERPAGE', 20);

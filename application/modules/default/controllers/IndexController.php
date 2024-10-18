@@ -368,13 +368,11 @@ class Default_IndexController extends Zend_Controller_Action
 		{
 			$result['result'] = 'error';
 			$result['message'] = 'Please enter email.';
-		}
-//		else if($emailaddress != $isvalidemail)
-//		{
-//			$result['result'] = 'error';
-//			$result['message'] = 'Please enter valid email.';
-//		}
-		else
+		}else if($emailaddress != $isvalidemail)
+		{
+			$result['result'] = 'error';
+			$result['message'] = 'Please enter valid email.';
+		}else
 		{
 			$emailexists = $user->getEmailAddressCount($emailaddress);
 			$emailcount= $emailexists[0]['emailcount'];
@@ -1641,11 +1639,8 @@ class Default_IndexController extends Zend_Controller_Action
 		$htmlcontent = '<div class="left_dashboard">'.$tmpHtml1.$tmpHtml2.'<div class="clear"></div>'.$tmpHtml5.$htmlcontent.'</div>';
 		}
 			$this->view->htmlcontent = $htmlcontent;
-
-        $addemployeeleavesModel = new Default_Model_Addemployeeleaves();
-        $loggedInEmployeeLeaveData = $addemployeeleavesModel->getEmployeeData($loginUserId);
-        $this->view->loggedInEmployeeLeaveData = $loggedInEmployeeLeaveData;
-    }
+	
+	}
 	
 	/**
 	 * 

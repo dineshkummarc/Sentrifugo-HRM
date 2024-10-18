@@ -328,7 +328,7 @@ $data = $storage->read();
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="expires" content="0">
 <meta name="msapplication-tap-highlight" content="no" /> 
-<title><?php echo APPLICATION_NAME; ?> - HRMS</title>
+<title><?php echo APPLICATION_NAME; ?> - Open Source HRMS</title>
 <meta http-equiv="Content-type" content="text/html; charset=UTF-8 " />
 <meta http-equiv="Content-Language" content="en-us" />
 <link rel="shortcut icon" href="<?php echo MEDIA_PATH;?>images/favicon.ico?v=2" />
@@ -978,10 +978,6 @@ if($loginuserRole == SUPERADMINROLE)
 	<?php if(Zend_Registry::get( 'tm_role' )=='Admin'){?>
 	<li class="reports-div" id="configurationli"><a href="<?php echo $this->baseUrl("/index.php/timemanagement/configuration/");?>"><span class="menu_icon"><i class="fa fa-cogs fa-2"></i></span><p class="one-line">Configuration</p></a></li>
 	<?php }?>
-
-    <?php if(Zend_Registry::get( 'tm_role' ) =='Manager' || Zend_Registry::get( 'tm_role' )=='Admin'){?>
-        <li class="reports-div" id="timsheetbyprojectli"><a href="<?php echo $this->baseUrl("/index.php/timemanagement/timesheetbyproject/");?>"><span class="menu_icon"><i class="fa fa-cogs fa-2"></i></span><p class="one-line">Timesheet by Project</p></a></li>
-    <?php }?>
 	
 	<!-- li class="reports-div" id="videoli"><a href="javascript:void(0);"  onclick="showVideoTutorial();"><span class="menu_icon"><i class="fa fa-video-camera fa-2"></i></span><p class="one-line">Video Tutorial</p></a></li -->
 	

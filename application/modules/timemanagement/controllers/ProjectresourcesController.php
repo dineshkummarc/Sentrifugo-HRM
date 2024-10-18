@@ -340,6 +340,7 @@ class Timemanagement_ProjectresourcesController extends Zend_Controller_Action
 			if($projectresourceId)
 			{
 				$checkProjectResourceDependency = $projectResourcesModel->checkProjectResourceDependency($projectId,$empId);
+				if($checkProjectResourceDependency == 0){
 					$data = array('is_active'=>0,'modified'=>gmdate("Y-m-d H:i:s"),'modified_by'=>$loginUserId);
 					$where = array('id=?'=>$projectresourceId);
 
@@ -364,7 +365,10 @@ class Timemanagement_ProjectresourcesController extends Zend_Controller_Action
 						$messages['message'] = 'Resource cannot be deleted.';
 						$messages['msgtype'] = 'error';
 					}
-
+				}else{
+					$messages['message'] = 'Resource started working in project.';
+					$messages['msgtype'] = 'error';
+				}
 			}
 			$this->_helper->json(array('message'=>$messages['message'],'status'=>$messages['msgtype']));
 		}

@@ -141,11 +141,7 @@
 		            return false; // Cancel the default action
 		        }
         });
-
-        var projectRows = $('#weekview .proj.ui-accordion-header');
-          for(var i=0 ; i<projectRows.length ;i++){
-              $('#weekview').accordion( "option", "active", i);
-          }
+        $('#weekview').accordion( "option", "active", 0 );
         
 		$('.ui-icon').text("arrow");
         $('.week_select_list').css('display','none');
@@ -1267,41 +1263,15 @@
       		$myTsWeekData = $this->myTsWeekData;
       		 
 			$sun_tot = 0;
-			$sun_billable_tot = 0;
-			$sun_unbillable_tot = 0;
-
 			$mon_tot = 0;
-            $mon_billable_tot = 0;
-            $mon_unbillable_tot = 0;
-
-            $tue_tot = 0;
-            $tue_billable_tot = 0;
-            $tue_unbillable_tot = 0;
-
-            $wed_tot = 0;
-            $wed_billable_tot = 0;
-            $wed_unbillable_tot = 0;
-
-            $thu_tot = 0;
-            $thu_billable_tot = 0;
-            $thu_unbillable_tot = 0;
-
-            $fri_tot = 0;
-            $fri_billable_tot = 0;
-            $fri_unbillable_tot = 0;
-
-            $sat_tot = 0;
-            $sat_billable_tot = 0;
-            $sat_unbillable_tot = 0;
-
-            $week_tot = 0;
-            $week_billable_tot = 0;
-            $week_unbillable_tot = 0;
-
-            $pro_tot = 0;
-            $pro_billable_tot = 0;
-            $pro_unbillable_tot = 0;
-
+			$tue_tot = 0;
+			$wed_tot = 0;
+			$thu_tot = 0;
+			$fri_tot = 0;
+			$sat_tot = 0;
+			$week_tot = 0;
+      		$pro_tot = 0;
+      		
       		$proArray = array();
       		$counter = 0;
       		$projN = "";
@@ -1347,96 +1317,48 @@
       				$sun_dur = explode(':',$weekData['sun_duration']);      				
         	 		$sun_tot += $sun_dur[0] * 60;
         	 		$sun_tot += $sun_dur[1];
-
-                    if(isset($weekData['is_billable']) && $weekData['is_billable'] == 1){
-                        $sun_billable_tot += (($sun_dur[0] * 60) + $sun_dur[1]);
-                    }else{
-                        $sun_unbillable_tot += (($sun_dur[0] * 60) + $sun_dur[1]);
-                    }
       			}
       		//	if($weekData['mon_duration'] != ''&& $weekData['mon_duration'] != 0) {
       			if(!in_array($weekData['mon_duration'],array('00:00','0:0','0'))) {
         	 		$mon_dur = explode(':',$weekData['mon_duration']);
         	 		$mon_tot += $mon_dur[0] * 60;
         	 		$mon_tot += $mon_dur[1];
-
-                    if(isset($weekData['is_billable']) && $weekData['is_billable'] == 1){
-                        $mon_billable_tot += (($mon_dur[0] * 60) + $mon_dur[1]);
-                    }else{
-                        $mon_unbillable_tot += (($mon_dur[0] * 60) + $mon_dur[1]);
-                    }
       			}
       		//	if($weekData['tue_duration'] != ''&& $weekData['tue_duration'] != 0) {
       			if(!in_array($weekData['tue_duration'],array('00:00','0:0','0'))) {
         	 		$tue_dur = explode(':',$weekData['tue_duration']);
         	 		$tue_tot += $tue_dur[0] * 60;
         	 		$tue_tot += $tue_dur[1];
-
-        	 		if(isset($weekData['is_billable']) && $weekData['is_billable'] == 1){
-        	 		    $tue_billable_tot += (($tue_dur[0] * 60) + $tue_dur[1]);
-                    }else{
-                        $tue_unbillable_tot += (($tue_dur[0] * 60) + $tue_dur[1]);
-                    }
       			}
       		//	if($weekData['wed_duration'] != ''&& $weekData['wed_duration'] != 0) {
       		    if(!in_array($weekData['wed_duration'],array('00:00','0:0','0'))) {      			
         	 		$wed_dur = explode(':',$weekData['wed_duration']);
         	 		$wed_tot += $wed_dur[0] * 60;
         	 		$wed_tot += $wed_dur[1];
-
-                    if(isset($weekData['is_billable']) && $weekData['is_billable'] == 1){
-                        $wed_billable_tot += (($wed_dur[0] * 60) + $wed_dur[1]);
-                    }else{
-                        $wed_unbillable_tot += (($wed_dur[0] * 60) + $wed_dur[1]);
-                    }
       			}
       		//	if($weekData['thu_duration'] != ''&& $weekData['thu_duration'] != 0) {
       			if(!in_array($weekData['thu_duration'],array('00:00','0:0','0'))) {
         	 		$thu_dur = explode(':',$weekData['thu_duration']);
         	 		$thu_tot += $thu_dur[0] * 60;
         	 		$thu_tot += $thu_dur[1];
-
-                    if(isset($weekData['is_billable']) && $weekData['is_billable'] == 1){
-                        $thu_billable_tot += (($thu_dur[0] * 60) + $thu_dur[1]);
-                    }else{
-                        $thu_unbillable_tot += (($thu_dur[0] * 60) + $thu_dur[1]);
-                    }
       			}
       		//	if($weekData['fri_duration'] != ''&& $weekData['fri_duration'] != 0) {
       			if(!in_array($weekData['fri_duration'],array('00:00','0:0','0'))) {
         	 		$fri_dur = explode(':',$weekData['fri_duration']);
         	 		$fri_tot += $fri_dur[0] * 60;
         	 		$fri_tot += $fri_dur[1];
-
-                    if(isset($weekData['is_billable']) && $weekData['is_billable'] == 1){
-                        $fri_billable_tot += (($fri_dur[0] * 60) + $fri_dur[1]);
-                    }else{
-                        $fri_unbillable_tot += (($fri_dur[0] * 60) + $fri_dur[1]);
-                    }
       			}
       		//	if($weekData['sat_duration'] != ''&& $weekData['sat_duration'] != 0) {
       			if(!in_array($weekData['sat_duration'],array('00:00','0:0','0'))) {
         	 		$sat_dur = explode(':',$weekData['sat_duration']);
         	 		$sat_tot += $sat_dur[0] * 60;
         	 		$sat_tot += $sat_dur[1];
-
-                    if(isset($weekData['is_billable']) && $weekData['is_billable'] == 1){
-                        $sat_billable_tot += (($sat_dur[0] * 60) + $sat_dur[1]);
-                    }else{
-                        $sat_unbillable_tot += (($sat_dur[0] * 60) + $sat_dur[1]);
-                    }
       			}
       		//	if($weekData['week_duration'] != ''&& $weekData['week_duration'] != 0) {
       			if(!in_array($weekData['week_duration'],array('00:00','0:0','0'))) {
         	 		$week_dur = explode(':',$weekData['week_duration']);
         	 		$week_tot += $week_dur[0] * 60;
         	 		$week_tot += $week_dur[1];
-
-                    if(isset($weekData['is_billable']) && $weekData['is_billable'] == 1){
-                        $week_billable_tot += (($week_dur[0] * 60) + $week_dur[1]);
-                    }else{
-                        $week_unbillable_tot += (($week_dur[0] * 60) + $week_dur[1]);
-                    }
       			}
         	 	
       			if($projName != $weekData['project_name']) {
@@ -1463,18 +1385,15 @@
       			?>
       		
 	        <tr id="proj_task_col_<?php echo $i; ?>" class="proj_task_col">
-	        <td class="project_name_txt">
-                <?php echo $weekData['task'];?>
-                <span class="project_name_txt billable-flag"><?php echo ((isset($weekData['is_billable']) && $weekData['is_billable']) ? ' (Billable)' : ' (Non-billable)'); ?></span>
-            </td>
-	        <td id="td_sun_<?php echo $i; ?>" class="<?php echo $weekendSunClass; ?> <?php echo $sunDisClass; ?> <?php echo $sunFreezedClass;?>"><?php echo ($weekData['sun_duration']=="00:00")?'&nbsp;':($weekData['sun_duration']);?></td>
-	        <td id="td_mon_<?php echo $i; ?>" class="<?php echo $weekendMonClass; ?> <?php echo $monDisClass; ?> <?php echo $monFreezedClass;?>"><?php echo ($weekData['mon_duration']=="00:00")?'&nbsp;':($weekData['mon_duration']);?></td>
+	        <td class="project_name_txt"><?php echo $weekData['task'];?></td>
+	        <td id="td_sun_<?php echo $i; ?>" class="<?php echo $weekendSunClass; ?> <?php echo $sunDisClass; ?> <?php echo $sunFreezedClass;?>"><?php echo ($weekData['sun_duration']==0)?'&nbsp;':($weekData['sun_duration']);?></td>
+	        <td id="td_mon_<?php echo $i; ?>" class="<?php echo $weekendMonClass; ?> <?php echo $monDisClass; ?> <?php echo $monFreezedClass;?>"><?php echo ($weekData['mon_duration']==0)?'&nbsp;':($weekData['mon_duration']);?></td>
 	        <!--  activeleft active  activeright-->
-	        <td id="td_tue_<?php echo $i; ?>" class="<?php echo $weekendTueClass; ?> <?php echo $tueDisClass; ?> <?php echo $tueFreezedClass;?>" ><?php echo ($weekData['tue_duration']=="00:00")?'&nbsp;':($weekData['tue_duration']);?></td>
-	        <td id="td_wed_<?php echo $i; ?>" class="<?php echo $weekendWedClass; ?> <?php echo $wedDisClass; ?> <?php echo $wedFreezedClass;?>"><?php echo ($weekData['wed_duration']=="00:00")?'&nbsp;':($weekData['wed_duration']);?></td>
-	        <td id="td_thu_<?php echo $i; ?>" class="<?php echo $weekendThuClass; ?> <?php echo $thuDisClass; ?> <?php echo $thuFreezedClass;?>"><?php echo ($weekData['thu_duration']=="00:00")?'&nbsp;':($weekData['thu_duration']);?></td>
-	        <td id="td_fri_<?php echo $i; ?>" class="<?php echo $weekendFriClass; ?> <?php echo $friDisClass; ?> <?php echo $friFreezedClass;?>"><?php echo ($weekData['fri_duration']=="00:00")?'&nbsp;':($weekData['fri_duration']);?></td>
-	        <td id="td_sat_<?php echo $i; ?>" class="<?php echo $weekendSatClass; ?> <?php echo $satDisClass; ?> <?php echo $satFreezedClass;?>"><?php echo ($weekData['sat_duration']=="00:00")?'&nbsp;':($weekData['sat_duration']);?></td>
+	        <td id="td_tue_<?php echo $i; ?>" class="<?php echo $weekendTueClass; ?> <?php echo $tueDisClass; ?> <?php echo $tueFreezedClass;?>" ><?php echo ($weekData['tue_duration']==0)?'&nbsp;':($weekData['tue_duration']);?></td>
+	        <td id="td_wed_<?php echo $i; ?>" class="<?php echo $weekendWedClass; ?> <?php echo $wedDisClass; ?> <?php echo $wedFreezedClass;?>"><?php echo ($weekData['wed_duration']==0)?'&nbsp;':($weekData['wed_duration']);?></td>
+	        <td id="td_thu_<?php echo $i; ?>" class="<?php echo $weekendThuClass; ?> <?php echo $thuDisClass; ?> <?php echo $thuFreezedClass;?>"><?php echo ($weekData['thu_duration']==0)?'&nbsp;':($weekData['thu_duration']);?></td>
+	        <td id="td_fri_<?php echo $i; ?>" class="<?php echo $weekendFriClass; ?> <?php echo $friDisClass; ?> <?php echo $friFreezedClass;?>"><?php echo ($weekData['fri_duration']==0)?'&nbsp;':($weekData['fri_duration']);?></td>
+	        <td id="td_sat_<?php echo $i; ?>" class="<?php echo $weekendSatClass; ?> <?php echo $satDisClass; ?> <?php echo $satFreezedClass;?>"><?php echo ($weekData['sat_duration']==0)?'&nbsp;':($weekData['sat_duration']);?></td>
 	        <?php 
       			$taskTotDurArray = explode(':',$weekData['week_duration']);
 	        	$taskTotHrs = '0';
@@ -1674,425 +1593,92 @@
         ?>
         <input id="sat_dayNumber" type="hidden" value="<?php echo $satDayNo;?>" />
         </td>
-        <td rowspan="2" class="total_week_hrs">
-            <div class="timesheet_week_billable_hours">
-                <span class="label">Billable </span>
-                <span class="value">
-                    <?php
-                    $weekHrs = floor($week_billable_tot / 60);
-                    $weekMins = $week_billable_tot % 60;
-                    if(strlen($weekHrs.'') == 1) $weekHrs = '0'.$weekHrs;
-                    if(strlen($weekMins.'') == 1) $weekMins = '0'.$weekMins;
-                    //echo ($week_tot != 0)?floor($week_tot / 60).':'.$week_tot % 60 :'0';
-                    echo $weekHrs.':'.$weekMins;
-                    ?>
-                </span>
-            </div>
-            <div class="timesheet_week_unbillable_hours">
-                <span class="label">Non-billable </span>
-                <span class="value">
-                    <?php
-                    $weekHrs = floor($week_unbillable_tot / 60);
-                    $weekMins = $week_unbillable_tot % 60;
-                    if(strlen($weekHrs.'') == 1) $weekHrs = '0'.$weekHrs;
-                    if(strlen($weekMins.'') == 1) $weekMins = '0'.$weekMins;
-                    //echo ($week_tot != 0)?floor($week_tot / 60).':'.$week_tot % 60 :'0';
-                    echo $weekHrs.':'.$weekMins;
-                    ?>
-                </span>
-            </div>
-            <div class="timesheet_week_total_hours">
-                <span class="label">Total </span>
-                <span class="value">
-                    <?php
-                    $weekHrs = floor($week_tot / 60);
-                    $weekMins = $week_tot % 60;
-                    if(strlen($weekHrs.'') == 1) $weekHrs = '0'.$weekHrs;
-                    if(strlen($weekMins.'') == 1) $weekMins = '0'.$weekMins;
-                    //echo ($week_tot != 0)?floor($week_tot / 60).':'.$week_tot % 60 :'0';
-                    echo $weekHrs.':'.$weekMins;
-                    ?>
-                </span>
-            </div>
-        </td>
+        <?php 
+        	$weekHrs = floor($week_tot / 60);
+        	$weekMins = $week_tot % 60; 
+        	if(strlen($weekHrs.'') == 1) $weekHrs = '0'.$weekHrs;
+			if(strlen($weekMins.'') == 1) $weekMins = '0'.$weekMins;     
+        ?>
+        <td rowspan="2" class="total_week_hrs"><?php 
+        //echo ($week_tot != 0)?floor($week_tot / 60).':'.$week_tot % 60 :'0';
+        echo $weekHrs.':'.$weekMins; 
+        ?></td>
       </tr>  
       <tr class="total_time_row">
         <td></td>
-        <td >
-            <div class="timesheet_day_billable_hours">
-                <span class="label">Billable </span>
-                <span class="value">
-                    <?php
-                    //echo ($sun_tot != 0)?floor($sun_tot / 60).':'.$sun_tot % 60 :'0';
-                    $sunHrsPart = floor($sun_billable_tot / 60);
-                    $sunMinsPart = $sun_billable_tot % 60;
-                    if(strlen($sunHrsPart.'') == 1) $sunHrsPart = '0'.$sunHrsPart;
-                    if(strlen($sunMinsPart.'') == 1) $sunMinsPart = '0'.$sunMinsPart;
-
-                    //echo ($sun_tot != 0)?floor($sun_tot / 60).':'.$sun_tot % 60 :'00:00';
-                    if($sunDisClass == '' && $sunDate <= $today && $sunDate >= $empDojDate )
-                        echo $sunHrsPart.':'.$sunMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-            <div class="timesheet_day_unbillable_hours">
-                <span class="label">Non-billable </span>
-                <span class="value">
-                    <?php
-                    //echo ($sun_tot != 0)?floor($sun_tot / 60).':'.$sun_tot % 60 :'0';
-                    $sunHrsPart = floor($sun_unbillable_tot / 60);
-                    $sunMinsPart = $sun_unbillable_tot % 60;
-                    if(strlen($sunHrsPart.'') == 1) $sunHrsPart = '0'.$sunHrsPart;
-                    if(strlen($sunMinsPart.'') == 1) $sunMinsPart = '0'.$sunMinsPart;
-
-                    //echo ($sun_tot != 0)?floor($sun_tot / 60).':'.$sun_tot % 60 :'00:00';
-                    if($sunDisClass == '' && $sunDate <= $today && $sunDate >= $empDojDate )
-                        echo $sunHrsPart.':'.$sunMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-            <div class="timesheet_day_total_hours">
-                <span class="label">Total </span>
-                <span class="value">
-                    <?php
-                    //echo ($sun_tot != 0)?floor($sun_tot / 60).':'.$sun_tot % 60 :'0';
-                    $sunHrsPart = floor($sun_tot / 60);
-                    $sunMinsPart = $sun_tot % 60;
-                    if(strlen($sunHrsPart.'') == 1) $sunHrsPart = '0'.$sunHrsPart;
-                    if(strlen($sunMinsPart.'') == 1) $sunMinsPart = '0'.$sunMinsPart;
-
-                    //echo ($sun_tot != 0)?floor($sun_tot / 60).':'.$sun_tot % 60 :'00:00';
-                    if($sunDisClass == '' && $sunDate <= $today && $sunDate >= $empDojDate )
-                        echo $sunHrsPart.':'.$sunMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-        </td>
-        <td >
-            <div class="timesheet_day_billable_hours">
-                <span class="label">Billable </span>
-                <span class="value">
-                    <?php
-                    //echo ($mon_tot != 0)?floor($mon_tot / 60).':'.$mon_tot % 60 :'0';
-                    $monHrsPart = floor($mon_billable_tot / 60);
-                    $monMinsPart = $mon_billable_tot % 60;
-                    if(strlen($monHrsPart.'') == 1) $monHrsPart = '0'.$monHrsPart;
-                    if(strlen($monMinsPart.'') == 1) $monMinsPart = '0'.$monMinsPart;
-
-                    if($monDisClass == '' && $monDate <= $today && $monDate >= $empDojDate)
-                        echo $monHrsPart.':'.$monMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-            <div class="timesheet_day_unbillable_hours">
-                <span class="label">Non-billable </span>
-                <span class="value">
-                    <?php
-                    //echo ($mon_tot != 0)?floor($mon_tot / 60).':'.$mon_tot % 60 :'0';
-                    $monHrsPart = floor($mon_unbillable_tot / 60);
-                    $monMinsPart = $mon_unbillable_tot % 60;
-                    if(strlen($monHrsPart.'') == 1) $monHrsPart = '0'.$monHrsPart;
-                    if(strlen($monMinsPart.'') == 1) $monMinsPart = '0'.$monMinsPart;
-
-                    if($monDisClass == '' && $monDate <= $today && $monDate >= $empDojDate)
-                        echo $monHrsPart.':'.$monMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-            <div class="timesheet_day_total_hours">
-                <span class="label">Total </span>
-                <span class="value">
-                    <?php
-                    //echo ($mon_tot != 0)?floor($mon_tot / 60).':'.$mon_tot % 60 :'0';
-                    $monHrsPart = floor($mon_tot / 60);
-                    $monMinsPart = $mon_tot % 60;
-                    if(strlen($monHrsPart.'') == 1) $monHrsPart = '0'.$monHrsPart;
-                    if(strlen($monMinsPart.'') == 1) $monMinsPart = '0'.$monMinsPart;
-
-                    if($monDisClass == '' && $monDate <= $today && $monDate >= $empDojDate)
-                        echo $monHrsPart.':'.$monMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-        </td>
-        <td >
-            <div class="timesheet_day_billable_hours">
-                <span class="label">Billable </span>
-                <span class="value">
-                    <?php
-                    //echo ($tue_tot != 0)?floor($tue_tot / 60).':'.$tue_tot % 60 :'0';
-                    $tueHrsPart = floor($tue_billable_tot / 60);
-                    $tueMinsPart = $tue_billable_tot % 60;
-                    if(strlen($tueHrsPart.'') == 1) $tueHrsPart = '0'.$tueHrsPart;
-                    if(strlen($tueMinsPart.'') == 1) $tueMinsPart = '0'.$tueMinsPart;
-
-                    if($tueDisClass == '' && $tueDate <= $today  && $tueDate >= $empDojDate)
-                        echo $tueHrsPart.':'.$tueMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-            <div class="timesheet_day_unbillable_hours">
-                <span class="label">Non-billable </span>
-                <span class="value">
-                    <?php
-                    //echo ($tue_tot != 0)?floor($tue_tot / 60).':'.$tue_tot % 60 :'0';
-                    $tueHrsPart = floor($tue_unbillable_tot / 60);
-                    $tueMinsPart = $tue_unbillable_tot % 60;
-                    if(strlen($tueHrsPart.'') == 1) $tueHrsPart = '0'.$tueHrsPart;
-                    if(strlen($tueMinsPart.'') == 1) $tueMinsPart = '0'.$tueMinsPart;
-
-                    if($tueDisClass == '' && $tueDate <= $today  && $tueDate >= $empDojDate)
-                        echo $tueHrsPart.':'.$tueMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-            <div class="timesheet_day_total_hours">
-                <span class="label">Total</span>
-                <span class="value">
-                    <?php
-                    //echo ($tue_tot != 0)?floor($tue_tot / 60).':'.$tue_tot % 60 :'0';
-                    $tueHrsPart = floor($tue_tot / 60);
-                    $tueMinsPart = $tue_tot % 60;
-                    if(strlen($tueHrsPart.'') == 1) $tueHrsPart = '0'.$tueHrsPart;
-                    if(strlen($tueMinsPart.'') == 1) $tueMinsPart = '0'.$tueMinsPart;
-
-                    if($tueDisClass == '' && $tueDate <= $today  && $tueDate >= $empDojDate)
-                        echo $tueHrsPart.':'.$tueMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-        </td>
-        <td >
-            <div class="timesheet_day_billable_hours">
-                <span class="label">Billable </span>
-                <span class="value">
-                    <?php
-                    //echo ($wed_tot != 0)?floor($wed_tot / 60).':'.$wed_tot % 60 :'0';
-                    $wedHrsPart = floor($wed_billable_tot / 60);
-                    $wedMinsPart = $wed_billable_tot % 60;
-                    if(strlen($wedHrsPart.'') == 1) $wedHrsPart = '0'.$wedHrsPart;
-                    if(strlen($wedMinsPart.'') == 1) $wedMinsPart = '0'.$wedMinsPart;
-
-                    if($wedDisClass == '' && $wedDate <= $today && $wedDate >= $empDojDate)
-                        echo $wedHrsPart.':'.$wedMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-            <div class="timesheet_day_unbillable_hours">
-                <span class="label">Non-billable </span>
-                <span class="value">
-                    <?php
-                    //echo ($wed_tot != 0)?floor($wed_tot / 60).':'.$wed_tot % 60 :'0';
-                    $wedHrsPart = floor($wed_unbillable_tot / 60);
-                    $wedMinsPart = $wed_unbillable_tot % 60;
-                    if(strlen($wedHrsPart.'') == 1) $wedHrsPart = '0'.$wedHrsPart;
-                    if(strlen($wedMinsPart.'') == 1) $wedMinsPart = '0'.$wedMinsPart;
-
-                    if($wedDisClass == '' && $wedDate <= $today && $wedDate >= $empDojDate)
-                        echo $wedHrsPart.':'.$wedMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-            <div class="timesheet_day_total_hours">
-                <span class="label">Total </span>
-                <span class="value">
-                    <?php
-                    //echo ($wed_tot != 0)?floor($wed_tot / 60).':'.$wed_tot % 60 :'0';
-                    $wedHrsPart = floor($wed_tot / 60);
-                    $wedMinsPart = $wed_tot % 60;
-                    if(strlen($wedHrsPart.'') == 1) $wedHrsPart = '0'.$wedHrsPart;
-                    if(strlen($wedMinsPart.'') == 1) $wedMinsPart = '0'.$wedMinsPart;
-
-                    if($wedDisClass == '' && $wedDate <= $today && $wedDate >= $empDojDate)
-                        echo $wedHrsPart.':'.$wedMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-        </td>
-        <td >
-            <div class="timesheet_day_billable_hours">
-                <span class="label">Billable </span>
-                <span class="value">
-                    <?php
-                    //echo ($thu_tot != 0)?floor($thu_tot / 60).':'.$thu_tot % 60 :'0';
-                    $thuHrsPart = floor($thu_billable_tot / 60);
-                    $thuMinsPart = $thu_billable_tot % 60;
-                    if(strlen($thuHrsPart.'') == 1) $thuHrsPart = '0'.$thuHrsPart;
-                    if(strlen($thuMinsPart.'') == 1) $thuMinsPart = '0'.$thuMinsPart;
-
-                    if($thuDisClass == '' && $thuDate <= $today && $thuDate >= $empDojDate )
-                        echo $thuHrsPart.':'.$thuMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-            <div class="timesheet_day_unbillable_hours">
-                <span class="label">Non-billable </span>
-                <span class="value">
-                    <?php
-                    //echo ($thu_tot != 0)?floor($thu_tot / 60).':'.$thu_tot % 60 :'0';
-                    $thuHrsPart = floor($thu_unbillable_tot / 60);
-                    $thuMinsPart = $thu_unbillable_tot % 60;
-                    if(strlen($thuHrsPart.'') == 1) $thuHrsPart = '0'.$thuHrsPart;
-                    if(strlen($thuMinsPart.'') == 1) $thuMinsPart = '0'.$thuMinsPart;
-
-                    if($thuDisClass == '' && $thuDate <= $today && $thuDate >= $empDojDate )
-                        echo $thuHrsPart.':'.$thuMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-            <div class="timesheet_day_total_hours">
-                <span class="label">Total </span>
-                <span class="value">
-                    <?php
-                    //echo ($thu_tot != 0)?floor($thu_tot / 60).':'.$thu_tot % 60 :'0';
-                    $thuHrsPart = floor($thu_tot / 60);
-                    $thuMinsPart = $thu_tot % 60;
-                    if(strlen($thuHrsPart.'') == 1) $thuHrsPart = '0'.$thuHrsPart;
-                    if(strlen($thuMinsPart.'') == 1) $thuMinsPart = '0'.$thuMinsPart;
-
-                    if($thuDisClass == '' && $thuDate <= $today && $thuDate >= $empDojDate )
-                        echo $thuHrsPart.':'.$thuMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-        </td>
-        <td >
-            <div class="timesheet_day_billable_hours">
-                <span class="label">Billable </span>
-                <span class="value">
-                    <?php
-                    //echo ($fri_tot != 0)?floor($fri_tot / 60).':'.$fri_tot % 60 :'0';
-                    $friHrsPart = floor($fri_billable_tot / 60);
-                    $friMinsPart = $fri_billable_tot % 60;
-                    if(strlen($friHrsPart.'') == 1) $friHrsPart = '0'.$friHrsPart;
-                    if(strlen($friMinsPart.'') == 1) $friMinsPart = '0'.$friMinsPart;
-
-                    if($friDisClass == '' && $friDate <= $today && $friDate >= $empDojDate )
-                        echo $friHrsPart.':'.$friMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-            <div class="timesheet_day_unbillable_hours">
-                <span class="label">Non-billable </span>
-                <span class="value">
-                    <?php
-                    //echo ($fri_tot != 0)?floor($fri_tot / 60).':'.$fri_tot % 60 :'0';
-                    $friHrsPart = floor($fri_unbillable_tot / 60);
-                    $friMinsPart = $fri_unbillable_tot % 60;
-                    if(strlen($friHrsPart.'') == 1) $friHrsPart = '0'.$friHrsPart;
-                    if(strlen($friMinsPart.'') == 1) $friMinsPart = '0'.$friMinsPart;
-
-                    if($friDisClass == '' && $friDate <= $today && $friDate >= $empDojDate )
-                        echo $friHrsPart.':'.$friMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-            <div class="timesheet_day_total_hours">
-                <span class="label">Total </span>
-                <span class="value">
-                    <?php
-                    //echo ($fri_tot != 0)?floor($fri_tot / 60).':'.$fri_tot % 60 :'0';
-                    $friHrsPart = floor($fri_tot / 60);
-                    $friMinsPart = $fri_tot % 60;
-                    if(strlen($friHrsPart.'') == 1) $friHrsPart = '0'.$friHrsPart;
-                    if(strlen($friMinsPart.'') == 1) $friMinsPart = '0'.$friMinsPart;
-
-                    if($friDisClass == '' && $friDate <= $today && $friDate >= $empDojDate )
-                        echo $friHrsPart.':'.$friMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-        </td>
-        <td >
-            <div class="timesheet_day_billable_hours">
-                <span class="label">Billable </span>
-                <span class="value">
-                    <?php
-                    //echo ($sat_tot != 0)?floor($sat_tot / 60).':'.$sat_tot % 60 :'0';
-                    $satHrsPart = floor($sat_billable_tot / 60);
-                    $satMinsPart = $sat_billable_tot % 60;
-                    if(strlen($satHrsPart.'') == 1) $satHrsPart = '0'.$satHrsPart;
-                    if(strlen($satMinsPart.'') == 1) $satMinsPart = '0'.$satMinsPart;
-
-                    if($satDisClass == '' && $satDate <= $today && $satDate >= $empDojDate)
-                        echo $satHrsPart.':'.$satMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-            <div class="timesheet_day_unbillable_hours">
-                <span class="label">Non-billable </span>
-                <span class="value">
-                    <?php
-                    //echo ($sat_tot != 0)?floor($sat_tot / 60).':'.$sat_tot % 60 :'0';
-                    $satHrsPart = floor($sat_unbillable_tot / 60);
-                    $satMinsPart = $sat_unbillable_tot % 60;
-                    if(strlen($satHrsPart.'') == 1) $satHrsPart = '0'.$satHrsPart;
-                    if(strlen($satMinsPart.'') == 1) $satMinsPart = '0'.$satMinsPart;
-
-                    if($satDisClass == '' && $satDate <= $today && $satDate >= $empDojDate)
-                        echo $satHrsPart.':'.$satMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-            <div class="timesheet_day_total_hours">
-                <span class="label">Total </span>
-                <span class="value">
-                    <?php
-                    //echo ($sat_tot != 0)?floor($sat_tot / 60).':'.$sat_tot % 60 :'0';
-                    $satHrsPart = floor($sat_tot / 60);
-                    $satMinsPart = $sat_tot % 60;
-                    if(strlen($satHrsPart.'') == 1) $satHrsPart = '0'.$satHrsPart;
-                    if(strlen($satMinsPart.'') == 1) $satMinsPart = '0'.$satMinsPart;
-
-                    if($satDisClass == '' && $satDate <= $today && $satDate >= $empDojDate)
-                        echo $satHrsPart.':'.$satMinsPart;
-                    else
-                        echo 'N/A';
-                    ?>
-                </span>
-            </div>
-
-       </td>
+        <td ><?php        
+         //echo ($sun_tot != 0)?floor($sun_tot / 60).':'.$sun_tot % 60 :'0';         
+	        $sunHrsPart = floor($sun_tot / 60);
+			$sunMinsPart = $sun_tot % 60;
+			if(strlen($sunHrsPart.'') == 1) $sunHrsPart = '0'.$sunHrsPart;
+			if(strlen($sunMinsPart.'') == 1) $sunMinsPart = '0'.$sunMinsPart;	
+			  		
+	        //echo ($sun_tot != 0)?floor($sun_tot / 60).':'.$sun_tot % 60 :'00:00';
+	        if($sunDisClass == '' && $sunDate <= $today && $sunDate >= $empDojDate )
+	        	echo $sunHrsPart.':'.$sunMinsPart;
+        ?>          
+         </td>
+        <td ><?php 
+        //echo ($mon_tot != 0)?floor($mon_tot / 60).':'.$mon_tot % 60 :'0';
+           $monHrsPart = floor($mon_tot / 60);
+		   $monMinsPart = $mon_tot % 60;
+		   if(strlen($monHrsPart.'') == 1) $monHrsPart = '0'.$monHrsPart;
+		   if(strlen($monMinsPart.'') == 1) $monMinsPart = '0'.$monMinsPart;
+			
+		   if($monDisClass == '' && $monDate <= $today && $monDate >= $empDojDate)
+	       		echo $monHrsPart.':'.$monMinsPart; 	  
+        ?></td>
+        <td ><?php 
+        //echo ($tue_tot != 0)?floor($tue_tot / 60).':'.$tue_tot % 60 :'0';
+        	$tueHrsPart = floor($tue_tot / 60);
+			$tueMinsPart = $tue_tot % 60;
+			if(strlen($tueHrsPart.'') == 1) $tueHrsPart = '0'.$tueHrsPart;
+			if(strlen($tueMinsPart.'') == 1) $tueMinsPart = '0'.$tueMinsPart;
+			
+			if($tueDisClass == '' && $tueDate <= $today  && $tueDate >= $empDojDate)
+	        	echo $tueHrsPart.':'.$tueMinsPart;  
+        ?></td>
+        <td ><?php 
+        //echo ($wed_tot != 0)?floor($wed_tot / 60).':'.$wed_tot % 60 :'0';
+        	$wedHrsPart = floor($wed_tot / 60);
+			$wedMinsPart = $wed_tot % 60;
+			if(strlen($wedHrsPart.'') == 1) $wedHrsPart = '0'.$wedHrsPart;
+			if(strlen($wedMinsPart.'') == 1) $wedMinsPart = '0'.$wedMinsPart;
+			
+			if($wedDisClass == '' && $wedDate <= $today && $wedDate >= $empDojDate)
+	        	echo $wedHrsPart.':'.$wedMinsPart;  
+        ?></td>
+        <td ><?php 
+        //echo ($thu_tot != 0)?floor($thu_tot / 60).':'.$thu_tot % 60 :'0';
+        	$thuHrsPart = floor($thu_tot / 60);
+			$thuMinsPart = $thu_tot % 60;
+			if(strlen($thuHrsPart.'') == 1) $thuHrsPart = '0'.$thuHrsPart;
+			if(strlen($thuMinsPart.'') == 1) $thuMinsPart = '0'.$thuMinsPart;
+			
+			if($thuDisClass == '' && $thuDate <= $today && $thuDate >= $empDojDate )
+	        	echo $thuHrsPart.':'.$thuMinsPart; 	   
+        ?></td>
+        <td ><?php 
+        //echo ($fri_tot != 0)?floor($fri_tot / 60).':'.$fri_tot % 60 :'0';
+        	$friHrsPart = floor($fri_tot / 60);
+			$friMinsPart = $fri_tot % 60;
+			if(strlen($friHrsPart.'') == 1) $friHrsPart = '0'.$friHrsPart;
+			if(strlen($friMinsPart.'') == 1) $friMinsPart = '0'.$friMinsPart;
+			
+			if($friDisClass == '' && $friDate <= $today && $friDate >= $empDojDate )
+	        	echo $friHrsPart.':'.$friMinsPart 
+        ?></td>
+        <td ><?php 
+        //echo ($sat_tot != 0)?floor($sat_tot / 60).':'.$sat_tot % 60 :'0';
+          	$satHrsPart = floor($sat_tot / 60);
+			$satMinsPart = $sat_tot % 60;
+			if(strlen($satHrsPart.'') == 1) $satHrsPart = '0'.$satHrsPart;
+			if(strlen($satMinsPart.'') == 1) $satMinsPart = '0'.$satMinsPart;
+			
+			if($satDisClass == '' && $satDate <= $today && $satDate >= $empDojDate)
+	        	echo $satHrsPart.':'.$satMinsPart;	  
+        ?></td>
+        
       </tr>
 	  <tr class="weekly_note_row">
 	  <td colspan="7"><div class="weekly_note"><label>Weekly Note</label>

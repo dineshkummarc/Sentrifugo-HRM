@@ -1,4 +1,4 @@
 <?php
-       defined('SUPERADMIN_EMAIL') || define('SUPERADMIN_EMAIL','umar+superadmin@phpstudios.com');
-       defined('APPLICATION_NAME') || define('APPLICATION_NAME','PHP Studios');
+       defined('SUPERADMIN_EMAIL') || define('SUPERADMIN_EMAIL','');
+       defined('APPLICATION_NAME') || define('APPLICATION_NAME','Sentrifugo');
      ?>

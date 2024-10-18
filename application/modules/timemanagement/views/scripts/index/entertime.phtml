@@ -181,11 +181,7 @@
             }
 
         });
-
-          var projectRows = $('#weekview .proj.ui-accordion-header');
-          for(var i=0 ; i<projectRows.length ;i++){
-              $('#weekview').accordion( "option", "active", i);
-          }
+        $('#weekview').accordion( "option", "active", 0 );
         
         $('.ui-icon').text("arrow");
        
@@ -891,7 +887,7 @@
         	if(!$sunEntryFlag && $sunDate <= $today && $sunDisClass == '') {?>
          <i class="fa fa-calendar-o fa-1-5" onclick="addOrShowNote('Sunday');"></i>
          <div style="display: none;" id="sun_note" class="daily_note enter_note"><div class="note_arrow"></div>
-        <textarea id="sun_note_text" rows="5" cols="50" placeholder = "Enter daily note"><?php echo ($weekNotes != '')?$weekNotes['sun_note']:''; ?></textarea>
+        <textarea id="sun_note_text" maxlength="50" rows="2" cols="50" placeholder = "Enter daily note"><?php echo ($weekNotes != '')?$weekNotes['sun_note']:''; ?></textarea>
          </div>               
         <?php } else if(sizeof($weekNotesData) > 0 && $weekNotes['sun_note'] != '') {?>
         <i class="fa fa-calendar-o fa-1-5" onclick="addOrShowNote('Sunday');"></i>
@@ -958,7 +954,7 @@
         if(!$monEntryFlag && $monDate <= $today  && $monDisClass == '' ) {?>
          <i class="fa fa-calendar-o fa-1-5" onclick="addOrShowNote('Monday');"></i>
         <div style="display: none;" id="mon_note" class="daily_note enter_note"><div class="note_arrow"></div>
-        <textarea id="mon_note_text" rows="5" cols="50" placeholder = "Enter daily note"><?php echo ($weekNotes != '')?$weekNotes['mon_note']:''; ?></textarea>
+        <textarea id="mon_note_text" maxlength="50" rows="2" cols="50" placeholder = "Enter daily note"><?php echo ($weekNotes != '')?$weekNotes['mon_note']:''; ?></textarea>
         </div>        
         <?php } else if(sizeof($weekNotesData) > 0 && $weekNotes['mon_note'] != '') {?>
         <i class="fa fa-calendar-o fa-1-5" onclick="addOrShowNote('Monday');"></i>
@@ -1027,7 +1023,7 @@
         	if(!$tueEntryFlag && $tueDate <= $today  && $tueDisClass == '') {?>
         <i class="fa fa-calendar-o fa-1-5" onclick="addOrShowNote('Tuesday');"></i>
         <div style="display: none;" id="tue_note" class="daily_note enter_note"><div class="note_arrow"></div>
-        <textarea id="tue_note_text" rows="5" cols="50" placeholder = "Enter daily note"><?php echo ($weekNotes != '')?$weekNotes['tue_note']:''; ?></textarea>
+        <textarea id="tue_note_text" maxlength="50" rows="2" cols="50" placeholder = "Enter daily note"><?php echo ($weekNotes != '')?$weekNotes['tue_note']:''; ?></textarea>
          </div>       
          <?php } else if(sizeof($weekNotesData) > 0 && $weekNotes['tue_note'] != '') {?>
          <i class="fa fa-calendar-o fa-1-5" onclick="addOrShowNote('Tuesday');"></i>
@@ -1097,7 +1093,7 @@
        	if(!$wedEntryFlag && $wedDate <= $today  && $wedDisClass == '') {?>
          <i class="fa fa-calendar-o fa-1-5" onclick="addOrShowNote('Wednesday');"></i>
         <div style="display: none;" id="wed_note" class="daily_note enter_note"><div class="note_arrow"></div>
-        <textarea id="wed_note_text" rows="5" cols="50" placeholder = "Enter daily note"><?php echo ($weekNotes != '')?$weekNotes['wed_note']:''; ?></textarea>
+        <textarea id="wed_note_text" maxlength="50" rows="2" cols="50" placeholder = "Enter daily note"><?php echo ($weekNotes != '')?$weekNotes['wed_note']:''; ?></textarea>
         </div>       
         <?php } else if(sizeof($weekNotesData) > 0  && $weekNotes['wed_note'] != '') {?>
         <i class="fa fa-calendar-o fa-1-5" onclick="addOrShowNote('Wednesday');"></i>
@@ -1167,7 +1163,7 @@
        if(!$thuEntryFlag && $thuDate <= $today  && $thuDisClass == '') {?>
         <i class="fa fa-calendar-o fa-1-5" onclick="addOrShowNote('Thursday');"></i>
         <div style="display: none;" id="thu_note" class="daily_note enter_note"><div class="note_arrow"></div>
-        <textarea id="thu_note_text" rows="5" cols="50" placeholder = "Enter daily note"><?php echo ($weekNotes != '')?$weekNotes['thu_note']:''; ?></textarea>
+        <textarea id="thu_note_text" maxlength="50" rows="2" cols="50" placeholder = "Enter daily note"><?php echo ($weekNotes != '')?$weekNotes['thu_note']:''; ?></textarea>
          </div>                    
         <?php } else if(sizeof($weekNotesData) > 0 && $weekNotes['thu_note'] != '') {?>
         <i class="fa fa-calendar-o fa-1-5" onclick="addOrShowNote('Thursday');"></i>
@@ -1235,7 +1231,7 @@
         if(!$friEntryFlag && $friDate <= $today  && $friDisClass == '') {?>
         <i class="fa fa-calendar-o fa-1-5" onclick="addOrShowNote('Friday');"></i>
         <div style="display: none;" id="fri_note" class="daily_note enter_note"><div class="note_arrow"></div>
-        <textarea id="fri_note_text" rows="5" cols="50" placeholder = "Enter daily note"><?php echo ($weekNotes != '')?$weekNotes['fri_note']:''; ?></textarea>
+        <textarea id="fri_note_text" maxlength="50" rows="2" cols="50" placeholder = "Enter daily note"><?php echo ($weekNotes != '')?$weekNotes['fri_note']:''; ?></textarea>
         </div>       
         <?php } else if(sizeof($weekNotesData) > 0  && $weekNotes['fri_note'] != '') {?>
         <i class="fa fa-calendar-o fa-1-5" onclick="addOrShowNote('Friday');"></i>
@@ -1303,7 +1299,7 @@
         if(!$satEntryFlag && $satDate <= $today  && $satDisClass == '') {?>
         <i class="fa fa-calendar-o fa-1-5"  onclick="addOrShowNote('Satarday');"></i>
         <div style="display: none;" id="sat_note" class="daily_note enter_note"><div class="note_arrow"></div>
-        <textarea id="sat_note_text" rows="5" cols="50" placeholder = "Enter daily note"><?php echo ($weekNotes != '')?$weekNotes['sat_note']:''; ?></textarea>
+        <textarea id="sat_note_text" maxlength="50" rows="2" cols="50" placeholder = "Enter daily note"><?php echo ($weekNotes != '')?$weekNotes['sat_note']:''; ?></textarea>
         </div>
         <?php } else if(sizeof($weekNotesData) > 0  && $weekNotes['sat_note'] != ''){?>
         <i class="fa fa-calendar-o fa-1-5"  onclick="addOrShowNote('Satarday');"></i>
@@ -1527,10 +1523,7 @@
       			?>
       		
 	        <tr id="proj_task_col_<?php echo $weekData['project_id']; ?>_<?php echo $weekData['project_task_id']; ?>" class="proj_task_col">
-	        <td class="project_name_txt">
-                <?php echo $weekData['task'];?>
-                <span class="project_name_txt billable-flag"><?php echo ((isset($weekData['is_billable']) && $weekData['is_billable']) ? ' (Billable)' : ' (Non-billable)'); ?></span>
-            </td>
+	        <td class="project_name_txt"><?php echo $weekData['task'];?></td>
 	        <td id="td_sun_<?php echo $weekData['project_task_id']; ?>" class="<?php echo $weekendSunClass; ?> <?php echo $sunDisClass; ?>">
 	       		<input	       		
 	       		 <?php 	       			       		 
@@ -1880,7 +1873,7 @@
       </tr>
 	  <tr class="weekly_note_row">
 	  <td colspan="5"><div class="weekly_note"><label>Weekly Note</label>
-	  <textarea id="week_note_text" cols="" rows="" placeholder="Enter note"><?php echo (sizeof($weekNotesData) > 0)? $weekNotes['week_note']:""; ?></textarea>
+	  <textarea id="week_note_text" maxlength="100" cols="" rows="" placeholder="Enter note"><?php echo (sizeof($weekNotesData) > 0)? $weekNotes['week_note']:""; ?></textarea>
 	  <!-- <textarea cols="" rows="">Enter note</textarea>-->
 	  </div></td>	   
 

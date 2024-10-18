@@ -191,7 +191,7 @@ class Assets_Form_Assets extends Zend_Form
 		
 		
 		$key_number = new Zend_Form_Element_Text('key_number');
-        //$key_number->setAttrib('maxLength', 50);
+        $key_number->setAttrib('maxLength', 50);
         $key_number->setLabel("Serial Number");
         $key_number->addFilter(new Zend_Filter_StringTrim());
 		$key_number->addValidator("regex",true,array(                           
@@ -240,7 +240,7 @@ class Assets_Form_Assets extends Zend_Form
 		$notes->setLabel("Notes");
 		$notes->setAttrib('rows', 10);
         $notes->setAttrib('cols', 50);
-		//$notes ->setAttrib('maxlength',200);
+		$notes ->setAttrib('maxlength',200);
        
 		
 		$image = new Zend_Form_Element_Hidden('image');	

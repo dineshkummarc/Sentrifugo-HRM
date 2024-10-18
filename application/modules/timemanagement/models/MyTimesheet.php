@@ -305,29 +305,14 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 				  ->setIntegrityCheck(false)
 				  ->from(array('et'=>$this->_name),array(
 				  	'ts.ts_week,et.sun_date,et.mon_date,et.tue_date,et.wed_date,et.thu_date,et.fri_date,et.sat_date,
-				  	ifnull(ts.sun_status,"no_entry")sun_status,
-					ifnull(ts.mon_status,"no_entry")mon_status,
-					ifnull(ts.tue_status,"no_entry")tue_status,
-					ifnull(ts.wed_status,"no_entry")wed_status,
-					ifnull(ts.thu_status,"no_entry")thu_status,
-					ifnull(ts.fri_status,"no_entry")fri_status,
-					ifnull(ts.sat_status,"no_entry")sat_status,
-				  	if(tpt.is_billable = 1, time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.sun_duration as time)))), \'%H:%i\'), \'00:00\') AS sun_duration_billable,
-                    if(tpt.is_billable is null or tpt.is_billable = 0 , time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.sun_duration as time)))), \'%H:%i\'), \'00:00\') AS sun_duration_unbillable,   
-                    if(tpt.is_billable = 1, time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.mon_duration as time)))), \'%H:%i\'), \'00:00\') AS mon_duration_billable,
-                    if(tpt.is_billable is null or tpt.is_billable = 0 , time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.mon_duration as time)))), \'%H:%i\'), \'00:00\') AS mon_duration_unbillable,
-                    if(tpt.is_billable = 1, time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.tue_duration as time)))), \'%H:%i\'), \'00:00\') AS tue_duration_billable,
-                    if(tpt.is_billable is null or tpt.is_billable = 0 , time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.tue_duration as time)))), \'%H:%i\'), \'00:00\') AS tue_duration_unbillable,
-                    if(tpt.is_billable = 1, time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.wed_duration as time)))), \'%H:%i\'), \'00:00\') AS wed_duration_billable,
-                    if(tpt.is_billable is null or tpt.is_billable = 0 , time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.wed_duration as time)))), \'%H:%i\'), \'00:00\') AS wed_duration_unbillable,
-                    if(tpt.is_billable = 1, time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.thu_duration as time)))), \'%H:%i\'), \'00:00\') AS thu_duration_billable,
-                    if(tpt.is_billable is null or tpt.is_billable = 0 , time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.thu_duration as time)))), \'%H:%i\'), \'00:00\') AS thu_duration_unbillable,
-                    if(tpt.is_billable = 1, time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.fri_duration as time)))), \'%H:%i\'), \'00:00\') AS fri_duration_billable,
-                    if(tpt.is_billable is null or tpt.is_billable = 0 , time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.fri_duration as time)))), \'%H:%i\'), \'00:00\') AS fri_duration_unbillable,
-                    if(tpt.is_billable = 1, time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.sat_duration as time)))), \'%H:%i\'), \'00:00\') AS sat_duration_billable,
-                    if(tpt.is_billable is null or tpt.is_billable = 0 , time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.sat_duration as time)))), \'%H:%i\'), \'00:00\') AS sat_duration_unbillable,
-                    if(tpt.is_billable = 1, time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.week_duration as time)))), \'%H:%i\'), \'00:00\') AS week_duration_billable,
-                    if(tpt.is_billable is null or tpt.is_billable = 0 , time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.week_duration as time)))), \'%H:%i\'), \'00:00\') AS week_duration_unbillable,
+				  	if(et.sun_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.sun_duration as time)))),"%H:%i"))sun_duration,ifnull(ts.sun_status,"no_entry")sun_status,
+					if(et.mon_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.mon_duration as time)))),"%H:%i"))mon_duration,ifnull(ts.mon_status,"no_entry")mon_status,
+					if(et.tue_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.tue_duration as time)))),"%H:%i"))tue_duration,ifnull(ts.tue_status,"no_entry")tue_status,
+					if(et.wed_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.wed_duration as time)))),"%H:%i"))wed_duration,ifnull(ts.wed_status,"no_entry")wed_status,
+					if(et.thu_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.thu_duration as time)))),"%H:%i"))thu_duration,ifnull(ts.thu_status,"no_entry")thu_status,
+					if(et.fri_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.fri_duration as time)))),"%H:%i"))fri_duration,ifnull(ts.fri_status,"no_entry")fri_status,
+					if(et.sat_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.sat_duration as time)))),"%H:%i"))sat_duration,ifnull(ts.sat_status,"no_entry")sat_status,
+				  	if(et.week_duration is null,"00:00",time_format(SEC_TO_TIME(sum(TIME_TO_SEC(cast(et.week_duration as time)))),"%H:%i"))week_duration,
 				  	GROUP_CONCAT(distinct ifnull(tn.sun_reject_note,""), if(ts.sun_reject_note != "", CONCAT(p.project_name,":",ifnull(ts.sun_reject_note,"")),"")) sun_reject_note,
 				  	GROUP_CONCAT(distinct ifnull(tn.mon_reject_note,""), if(ts.mon_reject_note != "", CONCAT(p.project_name,":",ifnull(ts.mon_reject_note,"")),"")) mon_reject_note,
 				  	GROUP_CONCAT(distinct ifnull(tn.tue_reject_note,""), if(ts.tue_reject_note != "", CONCAT(p.project_name,":",ifnull(ts.tue_reject_note,"")),"")) tue_reject_note,
@@ -340,7 +325,6 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 //			  if($project_ids != ""){
 //			  	$select->joinInner(array('ts'=>'tm_ts_status'),'ts.emp_id = et.emp_id and et.ts_year= ts.ts_year and et.ts_month= ts.ts_month and et.ts_week = ts.ts_week and et.project_id = ts.project_id and et.project_id IN ('.$project_ids.')',array());
 //			  }else{
-                $select->joinLeft(array('tpt' => 'tm_project_tasks'), 'et.project_task_id = tpt.id', array());
 			  	$select->joinInner(array('ts'=>'tm_ts_status'),'ts.emp_id = et.emp_id and et.ts_year= ts.ts_year and et.ts_month= ts.ts_month and et.ts_week = ts.ts_week and (et.project_id = ts.project_id OR ts.project_id IS NULL)',array());
 			  	$select->joinInner(array('tn'=>'tm_emp_ts_notes'),'tn.emp_id = ts.emp_id and tn.ts_year= ts.ts_year and tn.ts_month= ts.ts_month and tn.ts_week = ts.ts_week',array());
 			  	$select->joinLeft(array('p'=>'tm_projects'),'p.id = ts.project_id and p.id = et.project_id',array());
@@ -349,62 +333,8 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 			//  }
 	  	  	  $select->where("et.is_active=1 and ts.is_active=1 and et.ts_year = $year and  et.ts_month = $month and et.emp_id = $empId");
 			  $select->group('ts.ts_week');
-			  $select->group('tpt.is_billable');
-
-
-			 $final_select =  $this->select()->setIntegrityCheck(false)
-                  ->from(array("result" => $select),array("
-                  ts_week,
-                                sun_date,
-                                mon_date,
-                                tue_date,
-                                wed_date,
-                                thu_date,
-                                fri_date,
-                                sat_date,
-							   time_format(SEC_TO_TIME(TIME_TO_SEC(cast(max(sun_duration_billable) as time)) + TIME_TO_SEC(cast(max(sun_duration_unbillable) as time))), '%H:%i') as sun_duration, 
-							   time_format(SEC_TO_TIME(TIME_TO_SEC(cast(max(sun_duration_billable) as time)) + TIME_TO_SEC(cast(max(sun_duration_unbillable) as time))), '%H:%i') as sun_duration, 
-							   time_format(SEC_TO_TIME(TIME_TO_SEC(cast(max(sun_duration_billable) as time)) + TIME_TO_SEC(cast(max(sun_duration_unbillable) as time))), '%H:%i') as sun_duration, 
-							   time_format(SEC_TO_TIME(TIME_TO_SEC(cast(max(mon_duration_billable) as time)) + TIME_TO_SEC(cast(max(mon_duration_unbillable) as time))), '%H:%i') as mon_duration, 
-							   time_format(SEC_TO_TIME(TIME_TO_SEC(cast(max(tue_duration_billable) as time)) + TIME_TO_SEC(cast(max(tue_duration_unbillable) as time))), '%H:%i') as tue_duration, 
-							   time_format(SEC_TO_TIME(TIME_TO_SEC(cast(max(wed_duration_billable) as time)) + TIME_TO_SEC(cast(max(wed_duration_unbillable) as time))), '%H:%i') as wed_duration, 
-							   time_format(SEC_TO_TIME(TIME_TO_SEC(cast(max(thu_duration_billable) as time)) + TIME_TO_SEC(cast(max(thu_duration_unbillable) as time))), '%H:%i') as thu_duration, 
-							   time_format(SEC_TO_TIME(TIME_TO_SEC(cast(max(thu_duration_billable) as time)) + TIME_TO_SEC(cast(max(thu_duration_unbillable) as time))), '%H:%i') as thu_duration, 
-							   time_format(SEC_TO_TIME(TIME_TO_SEC(cast(max(fri_duration_billable) as time)) + TIME_TO_SEC(cast(max(fri_duration_unbillable) as time))), '%H:%i') as fri_duration, 
-							   time_format(SEC_TO_TIME(TIME_TO_SEC(cast(max(sat_duration_billable) as time)) + TIME_TO_SEC(cast(max(sat_duration_unbillable) as time))), '%H:%i') as sat_duration, 
-							   time_format(SEC_TO_TIME(TIME_TO_SEC(cast(max(week_duration_billable) as time)) + TIME_TO_SEC(cast(max(week_duration_unbillable) as time))), '%H:%i') as week_duration, 
-                                max(sun_duration_billable) as sun_duration_billable,
-                                max(sun_duration_unbillable) as sun_duration_unbillable,
-                                max(mon_duration_billable) as mon_duration_billable,
-                                max(mon_duration_unbillable) as mon_duration_unbillable,
-                                max(tue_duration_billable) as tue_duration_billable,
-                                max(tue_duration_unbillable) as tue_duration_unbillable,
-                                max(wed_duration_billable) as wed_duration_billable,
-                                max(wed_duration_unbillable) as wed_duration_unbillable,
-                                max(thu_duration_billable) as thu_duration_billable,
-                                max(thu_duration_unbillable) as thu_duration_unbillable,
-                                max(fri_duration_billable) as fri_duration_billable,
-                                max(fri_duration_unbillable) as fri_duration_unbillable,
-                                max(sat_duration_billable) as sat_duration_billable,
-                                max(sat_duration_unbillable) as sat_duration_unbillable,
-                                max(week_duration_billable) as week_duration_billable,
-                                max(week_duration_unbillable) as week_duration_unbillable,
-                                sun_reject_note,
-                                mon_reject_note,
-                                tue_reject_note,
-                                wed_reject_note,
-                                thu_reject_note,
-                                fri_reject_note,
-                                sat_reject_note
-                  
-                  "))->group('ts_week');
-
-//                      $final_select =  'select
-//
-//                                from (' . $select .') result';
-			//echo $select; exit;
-
-		return $this->fetchAll($final_select)->toArray();
+			//echo $select; exit;	  	         
+		return $this->fetchAll($select)->toArray();
 	}
 	//public function getWeeklyTimesheetData($empId,$year,$calWeek,$week) {
 	public function getWeeklyTimesheetData($empId,$year,$month,$week,$flag='') { //,$project_ids="" 
@@ -413,26 +343,21 @@ class Timemanagement_Model_MyTimesheet extends Zend_Db_Table_Abstract
 		if($flag != 'view'){
 			$where .= " and  p.project_status NOT IN ('draft')";
 		}
-		$select = $this->select()->distinct()
+		$select = $this->select()
 				  ->setIntegrityCheck(false)
 				  ->from(array('pte'=>'tm_project_task_employees'),array(
-				  	'pte.project_id','p.project_name','p.project_status','pte.project_task_id','t.task','pt.is_billable','sun_duration'=>'ifnull(et.sun_duration,0)','mon_duration'=>'ifnull(et.mon_duration,0)',
+				  	'pte.project_id','p.project_name','p.project_status','pte.project_task_id','t.task','sun_duration'=>'ifnull(et.sun_duration,0)','mon_duration'=>'ifnull(et.mon_duration,0)',
 				  	'tue_duration'=>'ifnull(et.tue_duration,0)','wed_duration'=>'ifnull(et.wed_duration,0)','thu_duration'=>'ifnull(et.thu_duration,0)','fri_duration'=>'ifnull(et.fri_duration,0)','sat_duration'=>'ifnull(et.sat_duration,0)','week_duration'=>'ifnull(et.week_duration,0)'))
 				  ->joinInner(array('pt'=>'tm_project_tasks'),'pt.id = pte.project_task_id',array())
 				  ->joinInner(array('p'=>'tm_projects'),'p.id = pt.project_id and p.id = pte.project_id',array())
 				  ->joinInner(array('t'=>'tm_tasks'),'t.id = pt.task_id',array());
 				 // ->joinLeft(array('et'=>'tm_emp_timesheets'),'et.project_task_id = pte.project_task_id and ts_year='.$year.' and et.ts_month='.$month.' and et.ts_week = '.$week.' and et.emp_id= '.$empId,array());
 				 
-				if($flag == 'view')
+				if($flag == 'view')  
 		 		 	$select->joinInner(array('et'=>'tm_emp_timesheets'),'et.project_task_id = pte.project_task_id and et.ts_year='.$year.' and et.ts_month='.$month.' and et.ts_week = '.$week.' and et.emp_id= '.$empId,array());
 		 		else  
-		 			$select->joinLeft(array('et'=>'tm_emp_timesheets'),'et.project_task_id = pte.project_task_id and ts_year='.$year.' and et.ts_month='.$month.' and et.ts_week = '.$week.' and et.emp_id= '.$empId,array());
-
-        if($flag == 'view')
-		 		$select->where("pte.emp_id =".$empId." and p.is_active = 1 $where ");
-        else
-            $select->where("pte.emp_id =".$empId." and pte.is_active = 1 and p.is_active = 1 $where ");
-
+		 			$select->joinLeft(array('et'=>'tm_emp_timesheets'),'et.project_task_id = pte.project_task_id and ts_year='.$year.' and et.ts_month='.$month.' and et.ts_week = '.$week.' and et.emp_id= '.$empId,array());	
+		  $select->where("pte.emp_id =".$empId." and pte.is_active = 1 and p.is_active = 1 $where ");
 //		  if($project_ids != ""){
 //		  	$select->where("p.id IN (".$project_ids.")");
 //		  }

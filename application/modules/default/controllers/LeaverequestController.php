@@ -49,8 +49,7 @@ class Default_LeaverequestController extends Zend_Controller_Action
 		$leaverequestform = new Default_Form_leaverequest();
 		$leaverequestform->setAttrib('action',BASE_URL.'leaverequest');
 		$leaverequestmodel = new Default_Model_Leaverequest();
-        $addemployeeleavesmodel = new Default_Model_Addemployeeleaves();
-        $employeeleavetypemodel = new Default_Model_Employeeleavetypes();
+		$employeeleavetypemodel = new Default_Model_Employeeleavetypes();
 		$leavemanagementmodel = new Default_Model_Leavemanagement();
 		$usersmodel = new Default_Model_Users();
 		$employeesmodel = new Default_Model_Employees();
@@ -176,23 +175,7 @@ class Default_LeaverequestController extends Zend_Controller_Action
 								$managerrequestdetails = $leaverequestmodel->getHrApprovedOrPendingLeavesData($loginUserId);
 								$isReportingManagerFlag = 'true';
 						  }
-						}
-
-						$loggedinUserLeaveDataArray = $leaverequestmodel->getUserLeavesData($loginUserId);
-						$casualLeavesUtilized = 0;
-						$annualLeavesUtilized = 0;
-
-						foreach ($loggedinUserLeaveDataArray as $loggedinUserLeaveData) {
-						    if($loggedinUserLeaveData['leavestatus'] == 'Approved' && $loggedinUserLeaveData['leavetypeid'] == 1){
-						        $casualLeavesUtilized += $loggedinUserLeaveData['appliedleavescount'];
-                            }
-                            elseif($loggedinUserLeaveData['leavestatus'] == 'Approved' && $loggedinUserLeaveData['leavetypeid'] == 2){
-                                $annualLeavesUtilized += $loggedinUserLeaveData['appliedleavescount'];
-                            }
-                        }
-
-						$employeeLeaveData = $addemployeeleavesmodel->getEmployeeData($loginUserId);
-
+						} 
 						/* End */	
 						$this->view->userfullname = $userfullname; 					
 						$this->view->loggedinEmpId = $loggedinEmpId;
@@ -207,7 +190,6 @@ class Default_LeaverequestController extends Zend_Controller_Action
 						$this->view->isReportingManagerFlag = $isReportingManagerFlag;
 						$this->view->searchRepFlag = $searchRepFlag;
 						$this->view->searchMeFlag = $searchMeFlag;
-						$this->view->employeeLeaveData = $employeeLeaveData;
 					}
                     else
 					{
@@ -299,7 +281,6 @@ class Default_LeaverequestController extends Zend_Controller_Action
 		$leavetypeArr = array();
 		$leaverequestform = new Default_Form_leaverequest();
 		$leaverequestmodel = new Default_Model_Leaverequest();
-		$addemployeeleavesmodel = new Default_Model_Addemployeeleaves();
 		$employeeleavetypesmodel = new Default_Model_Employeeleavetypes();
 		$leavemanagementmodel = new Default_Model_Leavemanagement();
 		$usersmodel = new Default_Model_Users();
@@ -473,11 +454,11 @@ class Default_LeaverequestController extends Zend_Controller_Action
 							$msgarray['to_date'] = 'To date should be greater than from date.';
 							$errorflag = 'false';
 						}
-//					  else
-//						{
-////						   $msgarray['to_date'] = $leavetypetext." permits maximum of ".$leavetypecount." leaves.";
-////						   $errorflag = 'false';
-//						}
+					  else
+						{
+						   $msgarray['to_date'] = $leavetypetext." permits maximum of ".$leavetypecount." leaves.";
+						   $errorflag = 'false';
+						}  				
 					}
 							   
 				}else
@@ -551,45 +532,10 @@ class Default_LeaverequestController extends Zend_Controller_Action
 			$msgarray['from_date'] = ' Leave cannot be applied before date of joining.';
 		}
 		/* End */
-
-
-        /** checking if applied leave type cross given threshold */
-        $loggedinUserLeaveDataArray = $leaverequestmodel->getUserLeavesData($loginUserId);
-        $casualLeavesUtilized = 0;
-        $annualLeavesUtilized = 0;
-
-        foreach ($loggedinUserLeaveDataArray as $loggedinUserLeaveData) {
-            if($loggedinUserLeaveData['leavestatus'] == 'Approved' && $loggedinUserLeaveData['leavetypeid'] == 1){
-                $casualLeavesUtilized += $loggedinUserLeaveData['appliedleavescount'];
-            }
-            elseif($loggedinUserLeaveData['leavestatus'] == 'Approved' && $loggedinUserLeaveData['leavetypeid'] == 2){
-                $annualLeavesUtilized += $loggedinUserLeaveData['appliedleavescount'];
-            }
-        }
-
-        $leaveLimit = current($leaverequestmodel->getAvailableLeaves($loginUserId))['leavelimit'];
-        $employeeData = $addemployeeleavesmodel->getEmployeeData($loginUserId);
-
-        $availableAnnualLeaves =  $employeeData['earned_annual_leaves'];
-        $availableCasualLeaves =  $employeeData['earned_casual_leaves'];
-
-//        if($leavetypeid == 1 && $appliedleavesdaycount > $availableCasualLeaves) {
-//            $errorflag = 'false';
-//            $msgarray['from_date'] = 'You only have ' . $availableCasualLeaves . ' Casual leaves available';
-//        }
-//        elseif($leavetypeid == 2 && $appliedleavesdaycount > $availableAnnualLeaves) {
-//            $errorflag = 'false';
-//            $msgarray['from_date'] = 'You only have ' . $availableAnnualLeaves . ' Annual leaves available';
-//        }elseif($leavetypeid ==1 && $availableCasualLeaves <= 0){
-//            $errorflag = 'false';
-//            $msgarray['from_date'] = 'You only have ' . $availableCasualLeaves . ' Casual leaves available';
-//        }
-//        elseif($leavetypeid ==2 && $availableAnnualLeaves <= 0){
-//            $errorflag = 'false';
-//            $msgarray['from_date'] = 'You only have ' . $availableAnnualLeaves . ' Annual leaves available';
-//        }
-
-        if($leaveday == 2)
+		
+		
+		
+		if($leaveday == 2)
 		 $appliedleavescount =  0.5;
 		else if($leaveday == 1)
 		 $appliedleavescount = ($days !=''?$days:$appliedleavesdaycount);

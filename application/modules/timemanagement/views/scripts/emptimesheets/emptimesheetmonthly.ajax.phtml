@@ -271,10 +271,7 @@ if(strlen($empMinsPart.'') == 1) $empMinsPart = '0'.$empMinsPart;?>
           			if($dayName == $day)  {
           				
           				$duration = ($weekData != "")?$weekData[strtolower($dayName).'_duration']:"00:00";
-                        $billableDuration = ($weekData != "")?$weekData[strtolower($dayName).'_duration_billable']:"00:00";
-                        $unBillableDuration = ($weekData != "")?$weekData[strtolower($dayName).'_duration_unbillable']:"00:00";
-
-                        $status = ($weekData != "")?$weekData[strtolower($dayName).'_status']:'no_entry';
+          				$status = ($weekData != "")?$weekData[strtolower($dayName).'_status']:'no_entry'; 
 						$rejected_note = ($weekData != "")?$weekData[strtolower($dayName).'_reject_note']:''; 
           				$calDate = $selectedYrMon[0].'-'.$selectedYrMon[1].'-'.$dayCounter;
           				$holiday = (in_array($calDate,$holidayDates))?"H":"";
@@ -309,39 +306,9 @@ if(strlen($empMinsPart.'') == 1) $empMinsPart = '0'.$empMinsPart;?>
           			if(strpos($tdClass, 'inactive_td')) {
 					
           		?>
-				<td id="id_day_<?php echo  $dayCounter; ?>" <?php echo $tdClass; ?> >
-                        <span class="date"><?php echo  $dayCounter; ?></span>
-                        <div class="hrs_displ">
-                            <?php if(!strpos($tdClass, 'inactive_td')) {?>
-                                <div class="calendar_day_total_hours">
-                                    <span class="total_hrs_txt">Total</span><span class="time_disp"><?php echo (!strpos($tdClass, 'inactive_td'))?$duration:'';?></span>
-                                </div>
-                                <div class="calendar_day_billable_hours">
-
-                                    <span class="billable_hrs_txt">Billable</span><span class="billable_time_disp"><?php echo (!strpos($tdClass, 'inactive_td'))?$billableDuration:'';?></span>
-                                </div>
-                                <div class="calendar_day_unbillable_hours">
-                                    <span class="unbillable_hrs_txt">Non-billable</span><span class="unbillable_time_disp"><?php echo (!strpos($tdClass, 'inactive_td'))?$unBillableDuration:'';?></span>
-                                </div>
-                            <?php } ?>
-                        </div>
+				<td id="id_day_<?php echo  $dayCounter; ?>" <?php echo $tdClass; ?> ><span class="date"><?php echo  $dayCounter; ?></span><div class="hrs_displ"><span class="hrs_txt">Hours</span><span class="time_disp"><?php echo $duration;?></span></div>
 				<?php } else  { ?> 
-          		 	<td  style="cursor: pointer; cursor: hand;" onclick="emp_display_weeks_for_day(<?php  echo $i;?>,<?php echo $dayCounter;?>);" id="id_day_<?php echo  $dayCounter; ?>" <?php echo $tdClass; ?> >
-                        <span class="date"><?php echo  $dayCounter; ?></span>
-                        <div class="hrs_displ">
-                            <?php if(!strpos($tdClass, 'inactive_td')) {?>
-                                <div class="calendar_day_total_hours">
-                                    <span class="total_hrs_txt">Total</span><span class="time_disp"><?php echo (!strpos($tdClass, 'inactive_td'))?$duration:'';?></span>
-                                </div>
-                                <div class="calendar_day_billable_hours">
-
-                                    <span class="billable_hrs_txt">Billable</span><span class="billable_time_disp"><?php echo (!strpos($tdClass, 'inactive_td'))?$billableDuration:'';?></span>
-                                </div>
-                                <div class="calendar_day_unbillable_hours">
-                                    <span class="unbillable_hrs_txt">Non-billable</span><span class="unbillable_time_disp"><?php echo (!strpos($tdClass, 'inactive_td'))?$unBillableDuration:'';?></span>
-                                </div>
-                            <?php } ?>
-                        </div>
+          		 	<td  style="cursor: pointer; cursor: hand;" onclick="emp_display_weeks_for_day(<?php  echo $i;?>,<?php echo $dayCounter;?>);" id="id_day_<?php echo  $dayCounter; ?>" <?php echo $tdClass; ?> ><span class="date"><?php echo  $dayCounter; ?></span><div class="hrs_displ"><span class="hrs_txt">Hours</span><span class="time_disp"><?php echo $duration;?></span></div>
 					<?php } ?>
           		 	<?php  
           		 	//$leave = (in_array($dayCounter, $leavesArray))?"L":"";

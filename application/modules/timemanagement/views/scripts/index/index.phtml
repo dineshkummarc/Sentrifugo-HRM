@@ -531,9 +531,6 @@
           			if($dayName == $day)  {
           				
           				$duration = ($weekData != "")?$weekData[strtolower($dayName).'_duration']:"00:00";
-          				$billableDuration = ($weekData != "")?$weekData[strtolower($dayName).'_duration_billable']:"00:00";
-          				$unBillableDuration = ($weekData != "")?$weekData[strtolower($dayName).'_duration_unbillable']:"00:00";
-
           				$status = ($weekData != "")?$weekData[strtolower($dayName).'_status']:'no_entry'; 
           				$rejectNote = ($weekData != "")?$weekData[strtolower($dayName).'_reject_note']:"";            				
           				$calDate = $selectedYrMon[0].'-'.$selectedYrMon[1].'-'.$dayCounter;
@@ -596,21 +593,7 @@
           				}
           		 	?>
           		 	          		 	
-          		 	<span class="date"><?php echo  $dayCounter; ?></span>
-                        <div class="hrs_displ">
-                            <?php if(!strpos($tdClass, 'inactive_td')) {?>
-                                <div class="calendar_day_total_hours">
-                                    <span class="total_hrs_txt">Total</span><span class="time_disp"><?php echo (!strpos($tdClass, 'inactive_td'))?$duration:'';?></span>
-                                </div>
-                                <div class="calendar_day_billable_hours">
-
-                                    <span class="billable_hrs_txt">Billable</span><span class="billable_time_disp"><?php echo (!strpos($tdClass, 'inactive_td'))?$billableDuration:'';?></span>
-                                </div>
-                                <div class="calendar_day_unbillable_hours">
-                                    <span class="unbillable_hrs_txt">Non-billable</span><span class="unbillable_time_disp"><?php echo (!strpos($tdClass, 'inactive_td'))?$unBillableDuration:'';?></span>
-                                </div>
-                            <?php } ?>
-                        </div>
+          		 	<span class="date"><?php echo  $dayCounter; ?></span><div class="hrs_displ"><span class="hrs_txt">Hours</span><span class="time_disp"><?php echo (!strpos($tdClass, 'inactive_td'))?$duration:'';?></span></div>
           		 	<?php  
           		 	//$leave = (in_array($dayCounter, $leavesArray))?"L":"";
           		 	$leave = "";

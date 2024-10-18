@@ -49,13 +49,6 @@ class Default_HeirarchyController extends Zend_Controller_Action
 		$orgData = $structureModel->getOrgData();
 		$heirarchyModel = new Default_Model_Heirarchy();				
 		$levelsdata = $heirarchyModel->getlevelsusernames();
-
-        $defaultmodelprojects = new Default_Model_Projects();
-        for ($i=0 ; $i < count($levelsdata); $i++){
-            $projects = $defaultmodelprojects->getProjectByEmpId($levelsdata[$i]['userid']);
-            $levelsdata[$i]['projects'] = $projects;
-        }
-
 		//$baseUrl = $this->getBaseurl();	
 		//echo 		$baseUrl;exit;
 		$emps = $heirarchyModel->getAllEmployees();
@@ -86,7 +79,7 @@ class Default_HeirarchyController extends Zend_Controller_Action
 			{
 				if($data['parent'] == $parent)
 				{
-					$parr[$parent][] = array('userid' => $data['userid'],'userfullname' => $data['userfullname'],'profileimg'=>$data['profileimg'],'level_number'=>$data['level_number'],'parent'=>$data['parent'],'jobtitlename'=>$data['jobtitlename'],'projects'=>$data['projects']);
+					$parr[$parent][] = array('userid' => $data['userid'],'userfullname' => $data['userfullname'],'profileimg'=>$data['profileimg'],'level_number'=>$data['level_number'],'parent'=>$data['parent'],'jobtitlename'=>$data['jobtitlename']);
 					
 				}
 			}
@@ -122,11 +115,6 @@ class Default_HeirarchyController extends Zend_Controller_Action
 			$output = "<ul>";
 			foreach($parr[$parent] as $pdata)
 			{
-			    $projectsHtml = "";
-                $counter = 1;
-			    foreach ($pdata['projects'] as $pdataProject){
-                    $projectsHtml .= "<p class='projects'>" . '' . $counter++ . '. ' . $pdataProject['project_name'] . "</p>";
-                }
 		      $truncatedName = substr(($pdata['userfullname']),0,9);
 			  $output .=  "<li>
 			  <i></i>
@@ -134,7 +122,6 @@ class Default_HeirarchyController extends Zend_Controller_Action
 			  <img class='main-img' border='0' src='".DOMAIN."public/uploads/profile/".$pdata['profileimg']."' onerror='this.src=\"".DOMAIN."public/media/images/hierarchy-deafult-pic.jpg\"' />
 			  <span class='main-name' title='".ucwords($pdata['userfullname'])."' id='".$pdata['userid']."'>".$pdata['userfullname']."</span>
 			  <span class='main-desig' title='".ucwords($pdata['jobtitlename'])."'>".$pdata['jobtitlename']."</span>
-			   <div class='projects'>"  . $projectsHtml . "</div>
 			  </p>";
 			  $output .= $this->hasChildNoEdit($pdata['userid'],$parr);
 			} 

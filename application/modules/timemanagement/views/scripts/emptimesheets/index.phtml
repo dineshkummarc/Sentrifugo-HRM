@@ -93,9 +93,9 @@ $(document).ready(function(){
 var is_loading = false; // initialize is_loading by false to accept new loading
 // limit items per page
 $(function() {
-    //$(window).scroll(function() {
-        //if($(window).scrollTop() + $(window).height() == $(document).height()) {
-        //    if (is_loading == false) { // stop loading many times for the same page
+    $(window).scroll(function() {
+        if($(window).scrollTop() + $(window).height() == $(document).height()) {
+            if (is_loading == false) { // stop loading many times for the same page
                 // set is_loading to true to refuse new loading
                 is_loading = true;
                 // display the waiting loader
@@ -117,7 +117,7 @@ $(function() {
         	    var startday = '';
         	    var endday = '';
 				
-				$.get(base_url+'/timemanagement/emptimesheets/getmonthlyspan/selmn/'+selmn,function(data){
+				$.get(base_url+'/timemanagement/emptimesheets/getmonthlyspan/selmn/'+selmn,function(data){       
 			
 					$.ajax({
 						data:"emp_list_flag="+emp_list_flag+"&hidweek="+hidweek+"&type="+type+"&active="+active+"&clicked_status="+clicked_status+"&manager_id="+manager_id+"&startday="+data.startday+"&endday="+data.endday+"&search="+search+"&page="+page,	
@@ -128,16 +128,16 @@ $(function() {
 							// now we have the response, so hide the loader
 							$('#loader').hide();
 							// append: add the new statments to the existing data
-							//$('#idacc_content').append(data);
+							$('#idacc_content').append(data);
 							// set is_loading to false to accept new loading
 							is_loading = false;
 						}
-					});
+					});                 
             },'json');
 				
-            //}
-       //}
-    //});
+            }
+       }
+    });
 });
 </script>
 <?php //echo $this->tm_role; ?>

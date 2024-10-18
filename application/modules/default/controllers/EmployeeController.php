@@ -47,7 +47,7 @@ class Default_EmployeeController extends Zend_Controller_Action
 	}
 	public function indexAction()
 	{
-		$limit=INDEFINITELIMIT;
+		$limit=LIMIT;
 		$offset=0;
 		$auth = Zend_Auth::getInstance();
         $popConfigPermission = array();
@@ -75,7 +75,6 @@ class Default_EmployeeController extends Zend_Controller_Action
 				$search_val = $this->_request->getParam('search_val',null);
 				$search_str = $this->_request->getParam('search_str',null);
 				$role_id = $this->_request->getParam('role_id',null);
-				$show_all = $this->_request->getParam('showall',false);
 				
 				// get active roles
 				$roles_arr = $role_model->getRoles();
@@ -83,8 +82,8 @@ class Default_EmployeeController extends Zend_Controller_Action
 				//echo "<prE>";print_r($roles_arr);
 				
 				/* $dataTmp = $employeeModel->getGrid($sort, $by, $perPage, $pageNo, $searchData,$call,$dashboardcall,$loginUserId); */
-				$dataTmp = $employeeModel->getEmployees('',$loginUserId,$limit,$offset,$search_val,$search_str,$role_id,$show_all);
-				$totalemployees= $employeeModel->getEmployees('',$loginUserId,'','',$search_val,$search_str,$role_id,$show_all);
+				$dataTmp = $employeeModel->getEmployees('',$loginUserId,$limit,$offset,$search_val,$search_str,$role_id); 
+				$totalemployees= $employeeModel->getEmployees('',$loginUserId,'','',$search_val,$search_str,$role_id); 
 				$totalcount=count($totalemployees);
 				$empcount=count($dataTmp);
 		
@@ -2075,17 +2074,7 @@ public function editappraisal($id,$performanceflag,$ff_flag)
 				$menuID = EMPLOYEE;
 				$result = sapp_Global::logManager($menuID,$actionflag,$loginUserId,$user_id);
 				$trDb->commit();
-
-				//add employee default leaves
-                if(!$this->getRequest()->getParam('id')) {
-                    //calculating employee leave limit
-                    $totalMonthsLeft = (12- date("m",strtotime($data['date_of_joining']))) + (1 - (date("d",strtotime($data['date_of_joining'])) / 30));
-                    $leavesLeft = $totalMonthsLeft * 1.5;
-                    $leavesLeft = ceil($leavesLeft / 0.5) * 0.5;
-
-                    $employeeleavesModel = new Default_Model_Employeeleaves();
-                    $Id = $employeeleavesModel->SaveorUpdateEmployeeLeaves($data['user_id'], $leavesLeft,0,$loginUserId);
-                }
+				
 				// Send email to employee when his details are edited by other user.
 				$options['subject'] = APPLICATION_NAME.': Employee details updated';
                 $options['header'] = 'Employee details updated';

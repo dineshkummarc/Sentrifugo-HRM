@@ -628,11 +628,6 @@ if($dataArray['objectname']=='employeeadvances')
 				reset($fields);
 				foreach($fields AS $k=>$v) {
 					$tdclass = '';
-
-					if ($k == 'resources_on_project') {
-					    $tdclass = 'class="project_resource no-white-space"';
-                    }
-
 					// Look for additional attributes
 					$characterlimit = 40;
 					if(is_array($v)) {
@@ -642,9 +637,7 @@ if($dataArray['objectname']=='employeeadvances')
 						if(isset($v['characterlimit']))
 						$characterlimit = $v['characterlimit'];
 						$output .= "<td {$tdclass}{$align}{$valign}>";
-					}
-
-					else {
+					} else {
 						if($k == 'description' && $menuName == 'Screening Types')
 						$characterlimit = 80;
 						$output .= "<td {$tdclass}> ";
@@ -655,7 +648,7 @@ if($dataArray['objectname']=='employeeadvances')
 					} else {
 						if( $bodyCount== 0 && $jsFillFnName != '')
 						{ 
-							$valToInclude = $p[$k]; // (strlen($p[$k])>$characterlimit)? //substr($p[$k],0,$characterlimit)."..":$p[$k];
+							$valToInclude = (strlen($p[$k])>$characterlimit)? substr($p[$k],0,$characterlimit)."..":$p[$k];
 							$output .= "<a onclick= ".$jsFillFnName."(\"/id/$p[id]\") href= 'javascript:void(0)' title='".htmlentities (trim($p[$k]), ENT_QUOTES, "UTF-8")."' >".  htmlentities ($valToInclude, ENT_QUOTES, "UTF-8")."</a>";
 						}
 						else{
@@ -669,15 +662,15 @@ if($dataArray['objectname']=='employeeadvances')
 											// Strip tags
 											case 'description':
 												$stip_tags_text = strip_tags($p[$k]);
-												$valToInclude = $stip_tags_text;//(strlen($stip_tags_text)>$characterlimit)? substr($stip_tags_text,0,$characterlimit)."..":$stip_tags_text;
+												$valToInclude = (strlen($stip_tags_text)>$characterlimit)? substr($stip_tags_text,0,$characterlimit)."..":$stip_tags_text;
 												break;
 											default:
-												$valToInclude = $p[$k]; //(strlen($p[$k])>$characterlimit)? substr($p[$k],0,$characterlimit)."..":$p[$k];
+												$valToInclude = (strlen($p[$k])>$characterlimit)? substr($p[$k],0,$characterlimit)."..":$p[$k];
 												break;
 										}
 										break;
 									default:
-										$valToInclude = $p[$k]; //(strlen($p[$k])>$characterlimit)? substr($p[$k],0,$characterlimit)."..":$p[$k];
+										$valToInclude = (strlen($p[$k])>$characterlimit)? substr($p[$k],0,$characterlimit)."..":$p[$k];
 										break;
 								}
 		
@@ -803,11 +796,7 @@ if($dataArray['objectname']=='employeeadvances')
 										}
 										break;
 									default:
-									    if ($k == 'resources_on_project') {
-                                            $output .= "<p class ='word-break-all'".$dataclass." title='".trim($p[$k])."' >".htmlentities($valToInclude, ENT_QUOTES, "ISO-8859-1")."</p>";
-                                        } else {
-                                            $output .= "<span ".$dataclass." title='".trim($p[$k])."' >".htmlentities($valToInclude, ENT_QUOTES, "ISO-8859-1")."</span>";
-                                        }
+										$output .= "<span ".$dataclass." title='".trim($p[$k])."' >".htmlentities($valToInclude, ENT_QUOTES, "ISO-8859-1")."</span>";
 										break;
 								}
 								// Customize grid fields data - END					htmlentities(trim($p[$k]), ENT_QUOTES, "ISO-8859-1")

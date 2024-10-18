@@ -534,7 +534,7 @@ class Default_ScheduleinterviewsController extends Zend_Controller_Action
 			$file = BASE_PATH.'/uploads/resumes/'.$result['cand_resume'];
 			$status = sapp_Global::downloadFile($file);
 			if(!empty($status['message'])){
-				$this->_helper->getHelper("FlashMessenger")->setNamespace('down_resume')->addMessage($status['message']);
+				$this->_helper->FlashMessenger()->setNamespace('down_resume')->addMessage($status['message']);
 			}
     	}
   		$this->_redirect('scheduleinterviews/edit/id/'.$this->_getParam('int_id'));
@@ -728,7 +728,7 @@ class Default_ScheduleinterviewsController extends Zend_Controller_Action
 			    $getExistingCandidateRecord = $interview_model->getCandidateInInterviewProcess(trim($candidate_id));
 			 
 			    if($getExistingCandidateRecord > 0){
-			       $this->_helper->getHelper("FlashMessenger")->setNamespace('success')->addMessage('Interview already scheduled for this candidate.');
+			       $this->_helper->FlashMessenger()->setNamespace('success')->addMessage('Interview already scheduled for this candidate.');
 			       $this->_redirect('/scheduleinterviews');	 
 			    }			
 			}
@@ -949,9 +949,9 @@ class Default_ScheduleinterviewsController extends Zend_Controller_Action
 			$objID = $objidArr[0]['id'];
 			$result = sapp_Global::logManager($objID,$actionflag,$loginUserId,$tableid);
                         if($id == '')
-                            $this->_helper->getHelper("FlashMessenger")->setNamespace('success')->addMessage('Interview scheduled successfully.');
+                            $this->_helper->FlashMessenger()->setNamespace('success')->addMessage('Interview scheduled successfully.'); 
                         else
-                            $this->_helper->getHelper("FlashMessenger")->setNamespace('success')->addMessage('Interview details updated successfully.');
+                            $this->_helper->FlashMessenger()->setNamespace('success')->addMessage('Interview details updated successfully.'); 
 			$this->_redirect('/scheduleinterviews');			
 		}
 		else

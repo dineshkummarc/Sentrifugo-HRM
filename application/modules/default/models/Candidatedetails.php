@@ -49,8 +49,7 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
                         		array(
                         			'id'=>'c.id',
                         			'candidate_name'=>'c.candidate_name',
-                        			//'candidate_lastname'=>'c.candidate_lastname',
-                                    'createddate' => 'c.createddate',
+                        			//'candidate_lastname'=>'c.candidate_lastname', 
 				                    'emailid'=>'c.emailid', 
 				                    'cand_resume'=>'c.cand_resume',
 				                    'cand_status'=>'c.cand_status', 
@@ -307,7 +306,6 @@ class Default_Model_Candidatedetails extends Zend_Db_Table_Abstract
         $objName = 'candidatedetails';
 
         $tableFields = array('action'=>'Action',
-                             'createddate' => 'Created At',
                              'requisition_code' => 'Requisition Code',
 							 'jobtitle_name' => 'Job Title',
                              'candidate_name' => 'Candidate Name',

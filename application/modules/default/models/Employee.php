@@ -65,7 +65,7 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
         return $employeesData;       		
     }
 	 
-	public function getEmployees($managerid='',$loginUserId,$limit,$offset,$search_val,$search_str,$role_id,$show_all=false)
+	public function getEmployees($managerid='',$loginUserId,$limit,$offset,$search_val,$search_str,$role_id)
     {
     	$auth = Zend_Auth::getInstance();
     	$request = Zend_Controller_Front::getInstance();
@@ -100,24 +100,15 @@ class Default_Model_Employee extends Zend_Db_Table_Abstract
 				$where .= " AND e.emprole = '".$role_id."' ";
 			}
 		}
-
-		if($show_all!=true){
-		    $where .= "AND e.isactive = 1";
-        }
 	
        $employeesData = $this->select()
                                 ->setIntegrityCheck(false)	                                
                                 ->from(array('e' => 'main_employees_summary'),
                                         array('*','id'=>'e.user_id','extn'=>new Zend_Db_Expr('case when e.extension_number is not null then concat(e.office_number," (ext ",e.extension_number,")") when e.extension_number is null then e.office_number end'),'astatus'=> new Zend_Db_Expr('case when e.isactive = 0 then "Inactive" when e.isactive = 1 then "Active" when e.isactive = 2 then "Resigned"  when e.isactive = 3 then "Left" when e.isactive = 4 then "Suspended" end')
-                                            ))
-                                ->joinLeft(array('mep'=>'main_emppersonaldetails'),'e.user_id = mep.user_id',array(
-                                    'bloodgroup'=>'mep.bloodgroup',
-                                    'dob'=>'mep.dob'
-                                ))
+                                            ))                               
                                 ->where($where)
                                 ->limit($limit, $offset)
-								->order('e.isactive asc')
-                                ->order('e.userfullname asc');
+								->order('e.modifieddate desc');
    
         return $this->fetchAll($employeesData)->toArray();  		
     }

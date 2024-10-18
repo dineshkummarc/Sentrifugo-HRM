@@ -35,10 +35,9 @@ class Default_Model_Projects extends Zend_Db_Table_Abstract
 /* This is used in Advances for getting projects based on employee*/
 	
 		public function getProjectByEmpId($to_id){
-		$sql="select p.project_name from tm_project_task_employees
-INNER JOIN tm_projects p ON p.id = tm_project_task_employees.project_id              
-where tm_project_task_employees.emp_id=$to_id and tm_project_task_employees.is_active and p.project_status = 'in-progress' group by project_id;";
-
+		$sql="SELECT p.project_name FROM tm_project_employees pe
+		INNER JOIN tm_projects p ON p.id = pe.project_id
+					WHERE emp_id=$to_id"; 			
 	
 		$project_data  = $this->_db->fetchAll($sql,array("param1"=>$to_id,"param2"=>1));
 		return $project_data;

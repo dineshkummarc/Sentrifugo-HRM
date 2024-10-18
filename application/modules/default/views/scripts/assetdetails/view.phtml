@@ -52,9 +52,7 @@ else
 		 	?>   
        <thead>
        	<tr>
-         <th align="center" >Asset Manufacturer</th>
          <th align="center" >Asset Name</th>
-         <th align="center" >Serial#</th>
          <th align="center" >Allocated Date</th>
        </tr>
        </thead>  
@@ -63,9 +61,7 @@ else
 		 	foreach($this->userassetdata as $user_asset){
     	  ?>
     	  <tr class="row1">
-          <td align="right" ><?php echo $user_asset['manufacturer'];?></td>
           <td align="right" ><?php echo $user_asset['name'];?></td>
-          <td align="right" ><?php echo $user_asset['key_number'];?></td>
 		  <td align="right" ><?php echo sapp_Global::change_date($user_asset['created'],'view');?></td>
 		  
         </tr>

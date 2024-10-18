@@ -28,7 +28,7 @@ $controllerName = $request->getRequest()->getControllerName();
 $actionName = $request->getRequest()->getActionName();
 ?>
 <meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
-<title><?php echo APPLICATION_NAME; ?> - HRMS</title>
+<title><?php echo APPLICATION_NAME; ?> - Open Source HRMS</title>
 <meta http-equiv="Content-Language" content="en-us" />
 
 <meta http-equiv="imagetoolbar" content="no" />
@@ -152,21 +152,19 @@ var version = parseInt(navigator.sayswho[1]);
 	  $("#forgot_error_message").show();
 	  $("#forgot_error_message").html("Please enter an email.");
 	  return false;
-	}
-	// else if(!filter.test(sEmail))
-	// {
-	//   $("#forgot_error_message").show();
-	//   $("#forgot_error_message").html("Please enter a valid email.");
-	//   return false;
-	// }
-	else
+	}else if(!filter.test(sEmail))
+	{
+	  $("#forgot_error_message").show();
+	  $("#forgot_error_message").html("Please enter a valid email.");
+	  return false;
+	}else
 	{
 	   if($("#forgot_error_message").is(":visible"))
 		$("#forgot_error_message").hide();
        $.ajax({
-					url: base_url+"/index/sendpassword/format/json",
+					url: base_url+"/index/sendpassword/format/json",   
 					type : 'POST',	
-					data : {'emailaddress':sEmail},
+					data : 'emailaddress='+sEmail,
 					dataType: 'json',
 					success : function(response){
 					   if(response['result'] == 'success' && response['result'] !='' && response['message'] !='') 

@@ -27,11 +27,6 @@ function viewTimeEntry(year_month) {
 	 // window.location.href = url;
 	  window.location.href = base_url+"/timeentry/"+year_month+"///time";
 }
-function ProjectViewTimeEntry(year_month) {
-	var base_url = window.location.href.split('?')[0];
-	window.location.href = base_url+"?selYrMon="+year_month;
-}
-
 function  viewEnterTime(week,calWeek) {
 	 var selYrMon = $("#calSelYrMonth").val();
 	// var url = base_url + module_name + "/index/week?flag=time&selYrMon="+selYrMon+'&week='+week+'&calWeek='+calWeek;
@@ -54,15 +49,6 @@ function monthlyView(){
 	  window.location.href = base_url+'/monthview/'+selYrMon+'/mon';
 	
 }
-
-function projectMonthlyView(){
-	var base_url = window.location.href.split('?')[0];
-	var selYrMon = $("#calSelYrMonth").val();
-	window.location.href = base_url+'?selYrMon='+selYrMon;
-
-}
-
-
 function getWeekData(flag,weekNo,calWeek,day) {
 	if(day == undefined )
 		day = '';
@@ -75,7 +61,6 @@ function getWeekData(flag,weekNo,calWeek,day) {
    else    
 	    window.location.href = base_url+'/timeentry/'+selYrMon+'/'+weekNo+'/'+calWeek+'/'+flag+'/'+day;
 }
-
 function editWeekData(flag,day) {
 	
 	var selYrMon = $("#calSelYrMonth").val();
@@ -208,14 +193,14 @@ function saveAndSubmitTimesheet(weekNo,calWeek,weekStart,weekEnd) {
               	var sat_note = jQuery("textarea#sat_note_text").val();
               	var week_note = jQuery("textarea#week_note_text").val();
               	
-              	sun_note = (sun_note != undefined)?sun_note.replaceAll('&', ' and '):'';
-              	mon_note = (mon_note != undefined)?mon_note.replaceAll('&', ' and '):'';
-              	tue_note = (tue_note != undefined)?tue_note.replaceAll('&', ' and '):'';
-              	wed_note = (wed_note != undefined)?wed_note.replaceAll('&', ' and '):'';
-              	thu_note = (thu_note != undefined)?thu_note.replaceAll('&', ' and '):'';
-              	fri_note = (fri_note != undefined)?fri_note.replaceAll('&', ' and '):'';
-              	sat_note = (sat_note != undefined)?sat_note.replaceAll('&', ' and '):'';
-              	week_note = (week_note != undefined)?week_note.replaceAll('&', ' and '):'';
+              	sun_note = (sun_note != undefined)?sun_note:'';
+              	mon_note = (mon_note != undefined)?mon_note:'';
+              	tue_note = (tue_note != undefined)?tue_note:'';
+              	wed_note = (wed_note != undefined)?wed_note:'';
+              	thu_note = (thu_note != undefined)?thu_note:'';
+              	fri_note = (fri_note != undefined)?fri_note:'';
+              	sat_note = (sat_note != undefined)?sat_note:'';
+              	week_note = (week_note != undefined)?week_note:'';
   
               	var sunHrs = parseInt($('#sun_tot_hrs').text().trim());
               	var monHrs = parseInt($('#mon_tot_hrs').text().trim());
@@ -400,14 +385,14 @@ function saveTimesheet(weekNo,calWeek,weekStart,weekEnd) {
 	var sat_note = jQuery("textarea#sat_note_text").val();
 	var week_note = jQuery("textarea#week_note_text").val();
 	
-	sun_note = (sun_note != undefined)?sun_note.replaceAll('&', ' and '):'';
-	mon_note = (mon_note != undefined)?mon_note.replaceAll('&', ' and '):'';
-	tue_note = (tue_note != undefined)?tue_note.replaceAll('&', ' and '):'';
-	wed_note = (wed_note != undefined)?wed_note.replaceAll('&', ' and '):'';
-	thu_note = (thu_note != undefined)?thu_note.replaceAll('&', ' and '):'';
-	fri_note = (fri_note != undefined)?fri_note.replaceAll('&', ' and '):'';
-	sat_note = (sat_note != undefined)?sat_note.replaceAll('&', ' and '):'';
-	week_note = (week_note != undefined)?week_note.replaceAll('&', ' and '):'';
+	sun_note = (sun_note != undefined)?sun_note:'';
+	mon_note = (mon_note != undefined)?mon_note:'';
+	tue_note = (tue_note != undefined)?tue_note:'';
+	wed_note = (wed_note != undefined)?wed_note:'';
+	thu_note = (thu_note != undefined)?thu_note:'';
+	fri_note = (fri_note != undefined)?fri_note:'';
+	sat_note = (sat_note != undefined)?sat_note:'';
+	week_note = (week_note != undefined)?week_note:'';
 	
 //	console.log(" sun_note "+sun_note);
 //	console.log(" mon_note "+mon_note);
@@ -3244,5 +3229,3 @@ function redirecttolink(link,module)
 	 window.location = base_url+'/'+link;
 
 }
-
-

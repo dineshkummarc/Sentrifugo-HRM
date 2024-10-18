@@ -143,9 +143,6 @@ class Default_Model_Widgets extends Zend_Db_Table_Abstract
 				$whereStr .= " and e.department_id = ".$department_id ;
 			}
 		}
-
-        $whereStr .= " and e.isactive = 1";
-
 		/**
 		* 
 		* Get list of empoyees whose birthdates are on coming next 5 days.

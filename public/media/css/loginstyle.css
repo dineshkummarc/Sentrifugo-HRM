@@ -252,6 +252,6 @@ header, .login-header { width: 960px; }
 .three h1{ text-align:center; margin:0px 10px 20px 10px; padding:0; font-size:24px; line-height:30px; font-family: 'latobold', sans-serif; text-transform:uppercase; font-weight:normal;}
 .bg_new{position:absolute; height:50%; width:100%; background: url(../images/login-bg-new.jpg); background-size:cover; background-repeat: no-repeat; background-position:bottom;}
 .logonew{ margin:0 auto; width:200px; height:80px; position:absolute; top:0px; width:100%;}
-.logonew_place{ margin:0 auto; width:238px; height:77px; background: url(../images/sentrifugo-login-logo.png); position:relative; top:20px; background-size:100%; }
+.logonew_place{ margin:0 auto; width:238px; height:52px; background: url(../images/sentrifugo-login-logo.png); position:relative; top:20px; background-size:100%; }
 .help_icon{ font-family: 'latoregular', sans-serif; text-decoration:none; padding:5px 10px 5px 30px; font-size:18px; position:absolute; right:20px; top:20px; font-weight:normal; z-index:1; background: url(../images/help_icon.png) #fff no-repeat 8px 7px;}
 .help_icon:hover{ background: url(../images/help_icon.png) #f38a28 no-repeat 8px 7px;}

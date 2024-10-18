@@ -309,7 +309,7 @@ class Assets_Model_AssetCategories extends Zend_Db_Table_Abstract
 	  $select = $this->select()
             ->setIntegrityCheck(false)
 		    ->from(array('ac'=>'assets'),array())
-		    ->joinLeft(array('mu'=>'main_users')," mu.id=ac.allocated_to",array('mu.userfullname','ac.created','ac.name','ac.key_number','ac.manufacturer'))
+		    ->joinLeft(array('mu'=>'main_users')," mu.id=ac.allocated_to",array('mu.userfullname','ac.created','ac.name'))
 		    ->where('mu.isactive = 1  AND ac.isactive = 1 AND  mu.id ='.$userid.'');
 	
 		return $this->fetchAll($select)->toArray();

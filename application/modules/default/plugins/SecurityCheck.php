@@ -45,10 +45,7 @@ class Default_Plugin_SecurityCheck extends Zend_Controller_Plugin_Abstract
        	$this->_module= $this->getRequest()->getModuleName();
         
        	$this->_action= $this->getRequest()->getActionName();  
-
-       	if($this->_controller == 'integration')
-       	    return;
-
+		
         $withoutloginActionArr = array('index','login','loginsave','loginpopupsave','forgotpassword','editforgotpassword','sendpassword','popup');
 		
         if($this->_module == self::MODULE && $data['employeeId']){
