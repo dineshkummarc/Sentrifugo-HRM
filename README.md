@@ -1,11 +1,15 @@
-# Sentrifugo HRM
+Sentrifugo
+==========
 
 Sentrifugo is a free and powerful new-age Human Resource Management System that can be easily configured to adapt to your organizational processes.
+
+
 
 Installing Sentrifugo Version 3.1.1
 ======================================
 
 Sentrifugo comes with its own web-installer to help guide you through the installation process. 
+
 Note: You can also find these steps in http://www.sentrifugo.com/home/installationguide
 
 Table of Contents:
@@ -228,3 +232,4 @@ Table of Contents:
 	Once you login to the application, update any role in Human Resources -> User Management -> Roles and Privileges page.
 
 	Refer UPGRADE document for a detailed description of the installation process of patches.
+
