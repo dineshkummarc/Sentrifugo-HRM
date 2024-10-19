@@ -1,5 +1,5 @@
 # phpmySentrifugo
-formerly Sentrifugo
+formerly Sentrifugo, Works fine on php7.2.33.
 
 Sentrifugo is a free and powerful new-age Human Resource Management System that can be easily configured to adapt to your organizational processes.
 
